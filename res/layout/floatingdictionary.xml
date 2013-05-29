@@ -3,6 +3,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" android:background="#aa000000">
+    
+    <SearchView
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:imeOptions="actionSearch"
+        android:inputType ="text">
+    </SearchView>
 
     <TextView
         android:id="@+id/Status"
