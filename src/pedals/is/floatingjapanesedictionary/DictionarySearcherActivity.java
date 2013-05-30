@@ -17,25 +17,36 @@ public class DictionarySearcherActivity extends Activity {
 	    Intent intent = getIntent();
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	      String query = intent.getStringExtra(SearchManager.QUERY);
-	      String result = doQuery(query);
-	      displayText(result);
+	      DictionaryEntries result = doQuery(query);
+	      
+	      if(result.isEmpty()){
+	    	  displayText("No results");
+	      }
+	      else {
+	    	  displayDefinition(result.toJSON().toString());
+	      }
+	      
 	    }
 	    
 	    finish();
 	}
 	
+	private DictionaryEntries doQuery(String query) {
+		return DictionarySearcher.findWord(query);
+	}
+	
 	private void displayText(String result){
 		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_TEXT);
+	}
+	
+	private void displayDefinition(String result){
+		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_DEFINITION);
 	}
 
 	private void sendText(String text, int requestCode) {
 		Bundle data = new Bundle();
 		data.putString("TEXT", text);
         StandOutWindow.sendData(this,  FloatingJapaneseDictionaryWindow.class, StandOutWindow.DEFAULT_ID, requestCode, data, null, StandOutWindow.DISREGARD_ID);
-	}
-
-	private String doQuery(String query) {
-		return query;
 	}
 
 }
