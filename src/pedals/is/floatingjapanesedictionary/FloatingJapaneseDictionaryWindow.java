@@ -93,22 +93,15 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		final ListView listView = (ListView) window.findViewById(R.id.results);
 		listView.setAdapter(adapter);
 		
-		listView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+	    int listviewElementsheight = 0;
 
-	        @Override
-	        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-	                int oldBottom) {
-	            // its possible that the layout is not complete in which case
-	            // we will get all zero values for the positions, so ignore the event
-	            if (left == 0 && top == 0 && right == 0 && bottom == 0) {
-	                return;
-	            }
-	            
-	            listView.removeOnLayoutChangeListener(this);
-	            
-	            Toast.makeText(listView.getContext(), String.valueOf(listView.getChildCount()), Toast.LENGTH_LONG).show();
-	        }
-	    });
+	    for (int i = 0; i < adapter.getCount(); i++) {
+
+	        TextView childView = (TextView) adapter.getView(i, null, listView);
+	        listviewElementsheight += childView.getLineHeight() * childView.getLineHeight();
+        }
+
+        Toast.makeText(listView.getContext(), String.valueOf(listviewElementsheight), Toast.LENGTH_LONG).show();
 		
 	}
 
