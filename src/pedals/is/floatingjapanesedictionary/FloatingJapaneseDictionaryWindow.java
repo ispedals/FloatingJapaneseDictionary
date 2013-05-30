@@ -67,6 +67,9 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			Class<? extends StandOutWindow> fromCls, int fromId) {
 
 		Window window = getWindow(id);
+		
+		clearText(window);
+		
 		switch(requestCode){
 			case DISPLAY_DEFINITION:
 				displayDefinition(window, data.getString("TEXT"));
@@ -79,6 +82,14 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		
 	}
 	
+	private void clearText(Window window) {
+		TextView status = (TextView) window.findViewById(R.id.status);
+		ListView listView = (ListView) window.findViewById(R.id.results);
+		status.setText("");
+		listView.setAdapter(new ArrayAdapter<Object>(window.getContext(), R.layout.dictionaryentry));
+		
+	}
+
 	private void displayDefinition(Window window, String text) {
 		DictionaryEntries entries = null;
 		try {
