@@ -5,13 +5,11 @@ import android.content.ComponentName;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLayoutChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 import wei.mark.standout.StandOutWindow;
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
@@ -21,6 +19,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	public static final int DISPLAY_TEXT =0, DISPLAY_DEFINITION =1, DISPLAY_ERROR =2;
 	
 	private final int WIDTH = 400;
+	private final int HEIGHT = 400;
 	
 	@Override
 	public String getAppName() {
@@ -49,7 +48,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	@Override
 	public StandOutLayoutParams getParams(int id, Window window) {
-		return new StandOutLayoutParams(id, WIDTH, 200,
+		return new StandOutLayoutParams(id, WIDTH, HEIGHT,
 				StandOutLayoutParams.AUTO_POSITION, StandOutLayoutParams.AUTO_POSITION);
 	}
 
@@ -92,23 +91,12 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 				R.layout.dictionaryentry, entries);
 		final ListView listView = (ListView) window.findViewById(R.id.results);
 		listView.setAdapter(adapter);
-		
-	    int listviewElementsheight = 0;
-
-	    for (int i = 0; i < adapter.getCount(); i++) {
-
-	        TextView childView = (TextView) adapter.getView(i, null, listView);
-	        listviewElementsheight += childView.getLineHeight() * childView.getLineHeight();
-        }
-
-        Toast.makeText(listView.getContext(), String.valueOf(listviewElementsheight), Toast.LENGTH_LONG).show();
-		
 	}
 
 	private void displayError(Window window, String error) {
 		TextView status = (TextView) window.findViewById(R.id.status);
 		status.setTextSize(20);
-		status.setText("Error: " + error);		
+		status.setText("Error: " + error);
 	}
 
 	private void displayText(Window window, String text) {
