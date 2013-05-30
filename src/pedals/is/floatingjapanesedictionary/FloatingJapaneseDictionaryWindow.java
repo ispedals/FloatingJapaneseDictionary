@@ -5,11 +5,13 @@ import android.content.ComponentName;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLayoutChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import wei.mark.standout.StandOutWindow;
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
@@ -17,6 +19,8 @@ import wei.mark.standout.ui.Window;
 public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	
 	public static final int DISPLAY_TEXT =0, DISPLAY_DEFINITION =1, DISPLAY_ERROR =2;
+	
+	private final int WIDTH = 400;
 	
 	@Override
 	public String getAppName() {
@@ -45,7 +49,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	@Override
 	public StandOutLayoutParams getParams(int id, Window window) {
-		return new StandOutLayoutParams(id, 300, 200,
+		return new StandOutLayoutParams(id, WIDTH, 200,
 				StandOutLayoutParams.AUTO_POSITION, StandOutLayoutParams.AUTO_POSITION);
 	}
 
@@ -86,8 +90,25 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		}
 		ArrayAdapter<DictionaryEntry> adapter = new ArrayAdapter<DictionaryEntry>(window.getContext(), 
 				R.layout.dictionaryentry, entries);
-		ListView listView = (ListView) window.findViewById(R.id.results);
+		final ListView listView = (ListView) window.findViewById(R.id.results);
 		listView.setAdapter(adapter);
+		
+		listView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+
+	        @Override
+	        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+	                int oldBottom) {
+	            // its possible that the layout is not complete in which case
+	            // we will get all zero values for the positions, so ignore the event
+	            if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+	                return;
+	            }
+	            
+	            listView.removeOnLayoutChangeListener(this);
+	            
+	            Toast.makeText(listView.getContext(), String.valueOf(listView.getChildCount()), Toast.LENGTH_LONG).show();
+	        }
+	    });
 		
 	}
 
