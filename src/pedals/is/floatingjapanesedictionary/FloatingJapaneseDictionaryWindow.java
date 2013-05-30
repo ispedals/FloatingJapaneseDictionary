@@ -63,6 +63,10 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 		Window window = getWindow(id);
 		switch(requestCode){
+			case DISPLAY_DEFINITION:
+				displayDefinition(window, data.getString("TEXT"));
+				break;
+			case DISPLAY_TEXT:
 			default:
 				displayText(window, data.getString("TEXT"));
 		}
@@ -70,6 +74,27 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		
 	}
 	
+	private void displayDefinition(Window window, String text) {
+		DictionaryEntries entries = null;
+		try {
+			entries = DictionaryEntries.fromJSON(text);
+		}
+		catch (Exception e) {
+			displayError(window, "definitions lost inflight");
+		}
+		TextView status = (TextView) window.findViewById(R.id.results);
+		status.setTextSize(20);
+		
+		status.setText(entries.toString());
+		
+	}
+
+	private void displayError(Window window, String error) {
+		TextView status = (TextView) window.findViewById(R.id.results);
+		status.setTextSize(20);
+		status.setText("Error: " + error);		
+	}
+
 	private void displayText(Window window, String text) {
 		TextView status = (TextView) window.findViewById(R.id.results);
 		status.setTextSize(20);

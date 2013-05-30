@@ -15,6 +15,12 @@ public class DictionaryEntry {
 		this.entry = entry;
 	}
 	
+	public DictionaryEntry(JSONObject object) throws JSONException{
+		this.kanji = object.getString("kanji");
+		this.kana = object.getString("kana");
+		this.entry = object.getString("entry");
+	}
+	
 	public JSONObject toJSON() {
 		JSONObject ret = new JSONObject();
 		try {
