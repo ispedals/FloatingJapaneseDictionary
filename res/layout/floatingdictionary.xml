@@ -20,5 +20,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmallInverse" />
 
+    <ListView
+        android:id="@+id/results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>
