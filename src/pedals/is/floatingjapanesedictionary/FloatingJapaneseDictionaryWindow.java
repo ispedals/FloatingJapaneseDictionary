@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import wei.mark.standout.StandOutWindow;
@@ -82,21 +83,23 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		catch (Exception e) {
 			displayError(window, "definitions lost inflight");
 		}
-		TextView status = (TextView) window.findViewById(R.id.results);
-		status.setTextSize(20);
-		
-		status.setText(entries.toString());
+		LinearLayout results = (LinearLayout) window.findViewById(R.id.layout);
+		for(DictionaryEntry entry: entries){
+			TextView status = new TextView(window.getContext());
+			status.setText(entry.toString());
+			results.addView(status);
+		}
 		
 	}
 
 	private void displayError(Window window, String error) {
-		TextView status = (TextView) window.findViewById(R.id.results);
+		TextView status = (TextView) window.findViewById(R.id.status);
 		status.setTextSize(20);
 		status.setText("Error: " + error);		
 	}
 
 	private void displayText(Window window, String text) {
-		TextView status = (TextView) window.findViewById(R.id.results);
+		TextView status = (TextView) window.findViewById(R.id.status);
 		status.setTextSize(20);
 		status.setText(text);
 	}
