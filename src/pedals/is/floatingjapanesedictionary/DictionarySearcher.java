@@ -16,6 +16,8 @@ public class DictionarySearcher {
 	    		Environment.getExternalStoragePublicDirectory(
 	    				Environment.DIRECTORY_DOWNLOADS
 	    			), "dict.sqlite").getAbsolutePath();
+		
+		word = katakanaToHiragana(word);
 		SQLiteDatabase dictionary = null;
 		DictionaryEntries entries = new DictionaryEntries();
 		try {
@@ -32,5 +34,31 @@ public class DictionarySearcher {
 		}
 		return entries;
 	}
+	
+	//modified from https://code.google.com/p/kurikosu/source/browse/trunk/kurikosu/src/main/java/org/kurikosu/transcription/Hiragana2Katakana.java
+	private static String katakanaToHiragana(String kana) {
+
+		final int HIRAGANA_KATAKANA_UNICODE_SHIFT = 6 * 16;
+		
+		String ret = "";
+
+        for (int index = 0; index < kana.length(); index++) {
+
+                char letter = kana.charAt(index);
+                int letterValue = (int) letter;
+                
+                // The Unicode block for (full-width) katakana is U+30A0 ... U+30FF
+                // 12448...12543; the long vowel value is 12540, which we keep
+                if (letterValue >= 12448 && letterValue <= 12543 && letterValue != 12540 ){
+                		ret += (char) (letterValue - HIRAGANA_KATAKANA_UNICODE_SHIFT);
+        		}
+                else {
+                	ret +=letter;
+                }
+        
+        }
+        return ret;
+	}
+
 
 }
