@@ -1,14 +1,10 @@
 package pedals.is.floatingjapanesedictionary;
 
-import java.util.ArrayList;
-
 import wei.mark.standout.StandOutWindow;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.widget.Toast;
 
 public class DictionarySearcherActivity extends Activity {
 	
@@ -21,14 +17,7 @@ public class DictionarySearcherActivity extends Activity {
 	    Intent intent = getIntent();
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	      String query = intent.getStringExtra(SearchManager.QUERY);
-	      
-	      ArrayList<String> recognizedWords = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-	      String temp="";
-	      for(String w:recognizedWords){
-	    	  temp+=w+"|";
-	      }
-	      
-	      Toast.makeText(this, temp, Toast.LENGTH_LONG).show();
+
 	      DictionaryEntries result = doQuery(query);
 	      
 	      if(result.isEmpty()){
