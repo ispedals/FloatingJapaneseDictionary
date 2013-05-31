@@ -45,6 +45,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 				new ComponentName("pedals.is.floatingjapanesedictionary", "pedals.is.floatingjapanesedictionary.DictionarySearcherActivity")
 			)
 		);
+	    searchView.setSubmitButtonEnabled(true);
 	    
 	    final FloatingJapaneseDictionaryWindow thisWindow = this;
 	    Button clearButton = (Button) view.findViewById(R.id.clear);
