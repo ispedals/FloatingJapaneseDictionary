@@ -36,24 +36,35 @@ public class DictionarySearcher {
 	}
 	
 	//modified from https://code.google.com/p/kurikosu/source/browse/trunk/kurikosu/src/main/java/org/kurikosu/transcription/Hiragana2Katakana.java
-	private static String katakanaToHiragana(String kana) {
+	// only attempts conversion for strings that are wholly composed of katakana
+	private static String katakanaToHiragana(String word) {
 
+		//hiragana and katakana codepoints are separted by 6 * 16
 		final int HIRAGANA_KATAKANA_UNICODE_SHIFT = 6 * 16;
+		
+		//contains a non-katakana character, 
+		//if(word.matches"\\P{IsKatakana}")) {
+		//	return word;
+		//}
 		
 		String ret = "";
 
-        for (int index = 0; index < kana.length(); index++) {
+        for (int i = 0; i < word.length(); i++) {
 
-                char letter = kana.charAt(index);
-                int letterValue = (int) letter;
+                final char kana = word.charAt(i);
+                final int kanaValue = (int) kana;
                 
                 // The Unicode block for (full-width) katakana is U+30A0 ... U+30FF
                 // 12448...12543; the long vowel value is 12540, which we keep
-                if (letterValue >= 12448 && letterValue <= 12543 && letterValue != 12540 ){
-                		ret += (char) (letterValue - HIRAGANA_KATAKANA_UNICODE_SHIFT);
+                if (kanaValue >= 12448 && kanaValue <= 12543){
+                		ret += (char) (kanaValue - HIRAGANA_KATAKANA_UNICODE_SHIFT);
         		}
+                else if (kanaValue == 12540 ){
+                	ret +=kana;
+                }
                 else {
-                	ret +=letter;
+                	//no katakana, leave
+                	return word;
                 }
         
         }
