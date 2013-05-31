@@ -17,7 +17,8 @@ public class DictionarySearcherActivity extends Activity {
 	    Intent intent = getIntent();
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	      String query = intent.getStringExtra(SearchManager.QUERY);
-
+	      
+	      displaySearch(query);
 	      DictionaryEntries result = doQuery(query);
 	      
 	      if(result.isEmpty()){
@@ -32,6 +33,10 @@ public class DictionarySearcherActivity extends Activity {
 	    finish();
 	}
 	
+	private void displaySearch(String result) {
+		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_SEARCH);		
+	}
+
 	private DictionaryEntries doQuery(String query) {
 		return DictionarySearcher.findWord(query);
 	}

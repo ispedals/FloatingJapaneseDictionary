@@ -17,7 +17,8 @@ import wei.mark.standout.ui.Window;
 
 public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	
-	public static final int DISPLAY_TEXT =0, DISPLAY_DEFINITION =1, DISPLAY_ERROR =2;
+	public static final int DISPLAY_TEXT =0, DISPLAY_DEFINITION =1, DISPLAY_ERROR =2,
+			DISPLAY_SEARCH =3;
 	
 	private final int WIDTH = 400;
 	private final int HEIGHT = 400;
@@ -83,6 +84,8 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			case DISPLAY_DEFINITION:
 				displayDefinition(window, data.getString("TEXT"));
 				break;
+			case DISPLAY_SEARCH:
+				displaySearch(window, data.getString("TEXT"));
 			case DISPLAY_TEXT:
 			default:
 				displayText(window, data.getString("TEXT"));
@@ -123,6 +126,11 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		TextView status = (TextView) window.findViewById(R.id.status);
 		status.setTextSize(20);
 		status.setText(text);
+	}
+	
+	private void displaySearch(Window window, String text) {
+		SearchView status = (SearchView) window.findViewById(R.id.search);
+		status.setQuery(text, false);
 	}
 
 }
