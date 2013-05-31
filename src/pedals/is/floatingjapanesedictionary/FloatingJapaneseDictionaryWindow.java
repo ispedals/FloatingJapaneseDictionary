@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -32,7 +33,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	}
 
 	@Override
-	public void createAndAttachView(int id, FrameLayout frame) {
+	public void createAndAttachView(final int id, FrameLayout frame) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.floatingdictionary, frame, true);
 		
@@ -43,6 +44,14 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 				new ComponentName("pedals.is.floatingjapanesedictionary", "pedals.is.floatingjapanesedictionary.DictionarySearcherActivity")
 			)
 		);
+	    
+	    final FloatingJapaneseDictionaryWindow thisWindow = this;
+	    Button clearButton = (Button) view.findViewById(R.id.clear);
+	    clearButton.setOnClickListener(new View.OnClickListener() {
+	        public void onClick(View v) {
+	        	thisWindow.clearText(thisWindow.getWindow(id));
+	        }
+	    });
 
 	}
 
