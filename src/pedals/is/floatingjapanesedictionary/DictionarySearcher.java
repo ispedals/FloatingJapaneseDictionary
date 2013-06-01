@@ -1,6 +1,7 @@
 package pedals.is.floatingjapanesedictionary;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,13 +20,25 @@ public class DictionarySearcher {
 		
 		word = katakanaToHiragana(word);
 		SQLiteDatabase dictionary = null;
-		DictionaryEntries entries = new DictionaryEntries();
+		final DictionaryEntries entries = new DictionaryEntries();
 		try {
 			dictionary = SQLiteDatabase.openDatabase(dictionaryPath, null, SQLiteDatabase.OPEN_READONLY);
 			Cursor c = dictionary.rawQuery(wordQuery, new String[] { word, word });
 			while(c.moveToNext()) {
 				DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2));
 				entries.add(entry);
+			}
+			c.close();
+			
+			//now see if the word can be deinflected
+			ArrayList<DeinflectorTerm> words = DeInflector.deInflect(word);
+			for(DeinflectorTerm term: words){
+				c = dictionary.rawQuery(wordQuery, new String[] { term.word, term.word });
+				while(c.moveToNext()) {
+					DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2), term.reason);
+					entries.add(entry);
+				}
+				c.close();
 			}
 		} finally { 
 			if(dictionary != null){

@@ -15,6 +15,10 @@ public class DictionaryEntry {
 		this.entry = entry;
 	}
 	
+	public DictionaryEntry(String kanji, String kana, String entry, String deinflect){
+		this(kanji, kana, "("+deinflect+") " + entry);
+	}
+	
 	public DictionaryEntry(JSONObject object) throws JSONException{
 		this.kanji = object.getString("kanji");
 		this.kana = object.getString("kana");
