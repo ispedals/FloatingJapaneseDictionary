@@ -22,24 +22,32 @@ public class DictionarySearcher {
 		final DictionaryEntries entries = new DictionaryEntries();
 		try {
 			dictionary = SQLiteDatabase.openDatabase(dictionaryPath, null, SQLiteDatabase.OPEN_READONLY);
-			Cursor c = dictionary.rawQuery(wordQuery, new String[] { word, katakanaToHiragana(word) });
-			while(c.moveToNext()) {
-				DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2));
-				entries.add(entry);
-			}
-			c.close();
 			
-			//now see if the word can be deinflected
-			ArrayList<DeinflectorTerm> words = DeInflector.deInflect(word);
-			for(DeinflectorTerm term: words){
-				c = dictionary.rawQuery(wordQuery, new String[] { term.word, term.word });
+			while(entries.size() == 0 && word.length() > 0){
+				Cursor c = dictionary.rawQuery(wordQuery, new String[] { word, katakanaToHiragana(word) });
+				
 				while(c.moveToNext()) {
-					DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2), term.reason);
+					DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2));
 					entries.add(entry);
 				}
 				c.close();
+				
+				//now see if the word can be deinflected
+				ArrayList<DeinflectorTerm> words = DeInflector.deInflect(word);
+				for(DeinflectorTerm term: words){
+					c = dictionary.rawQuery(wordQuery, new String[] { term.word, term.word });
+					while(c.moveToNext()) {
+						DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2), term.reason);
+						entries.add(entry);
+					}
+					c.close();
+				}
+				
+				word = word.substring(0, word.length()-1);
 			}
-		} finally { 
+			
+		} 
+		finally { 
 			if(dictionary != null){
 				dictionary.close();
 			}

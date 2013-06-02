@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class DictionarySearcherActivity extends Activity {
 	
@@ -33,14 +34,21 @@ public class DictionarySearcherActivity extends Activity {
 	    finish();
 	}
 	
+	private DictionaryEntries doQuery(String query) {
+		DictionaryEntries entries = null;
+		try {
+			entries = DictionarySearcher.findWord(query);
+		}
+		catch (Exception e){
+			Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+		}
+		return entries;
+	}
+	
 	private void displaySearch(String result) {
 		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_SEARCH);		
 	}
 
-	private DictionaryEntries doQuery(String query) {
-		return DictionarySearcher.findWord(query);
-	}
-	
 	private void displayText(String result){
 		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_TEXT);
 	}
