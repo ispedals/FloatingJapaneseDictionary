@@ -18,12 +18,11 @@ public class DictionarySearcher {
 	    				Environment.DIRECTORY_DOWNLOADS
 	    			), "dict.sqlite").getAbsolutePath();
 		
-		word = katakanaToHiragana(word);
 		SQLiteDatabase dictionary = null;
 		final DictionaryEntries entries = new DictionaryEntries();
 		try {
 			dictionary = SQLiteDatabase.openDatabase(dictionaryPath, null, SQLiteDatabase.OPEN_READONLY);
-			Cursor c = dictionary.rawQuery(wordQuery, new String[] { word, word });
+			Cursor c = dictionary.rawQuery(wordQuery, new String[] { word, katakanaToHiragana(word) });
 			while(c.moveToNext()) {
 				DictionaryEntry entry = new DictionaryEntry(c.getString(0), c.getString(1), c.getString(2));
 				entries.add(entry);
