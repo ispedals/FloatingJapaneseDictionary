@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" android:background="#aa000000"
-    android:id="@+id/layout">
-    
+    android:background="#aa000000"
+    android:orientation="vertical" >
+
     <SearchView
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
         android:imeOptions="actionSearch"
-        android:inputType ="text">
-    </SearchView>
+        android:inputType="text" />
 
     <ListView
         android:id="@+id/results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search"
         android:layout_alignParentLeft="true"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall">
-    </ListView>
-    
-        <TextView
+        android:layout_below="@+id/search"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+    <TextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/results"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/results"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
