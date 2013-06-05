@@ -48,7 +48,6 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 								"pedals.is.floatingjapanesedictionary",
 								"pedals.is.floatingjapanesedictionary.DictionarySearcherActivity")));
 		searchView.setSubmitButtonEnabled(true);
-		searchView.setIconifiedByDefault(true);
 
 		final FloatingJapaneseDictionaryWindow thisWindow = this;
 		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
