@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class DictionarySearcherActivity extends Activity {
 	
@@ -35,14 +34,7 @@ public class DictionarySearcherActivity extends Activity {
 	}
 	
 	private DictionaryEntries doQuery(String query) {
-		DictionaryEntries entries = null;
-		try {
-			entries = DictionarySearcher.findWord(query);
-		}
-		catch (Exception e){
-			Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
-		}
-		return entries;
+		return DictionarySearcher.findWord(query);
 	}
 	
 	private void displaySearch(String result) {

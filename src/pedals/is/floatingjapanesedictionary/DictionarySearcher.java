@@ -10,7 +10,7 @@ import android.os.Environment;
 public class DictionarySearcher {
 	
 	//TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
-	private static final String wordQuery = "select kanji, kana, entry from dict where kanji=? or kana=?";
+	private static final String wordQuery = "select distinct kanji, kana, entry from dict where kanji=? or kana=?";
 	
 	public static DictionaryEntries findWord(String word) {
 		final String dictionaryPath= new File(

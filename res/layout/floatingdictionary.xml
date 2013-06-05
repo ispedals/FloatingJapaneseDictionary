@@ -21,7 +21,7 @@
         android:layout_below="@+id/search"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/clear"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
         android:id="@+id/clear"
@@ -30,14 +30,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/search"
-        android:text="Clear" />
+        android:text="X" />
 
     <ListView
         android:id="@+id/results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clear"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall">
     </ListView>
 
 </RelativeLayout>

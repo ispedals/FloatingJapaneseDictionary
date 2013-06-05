@@ -46,6 +46,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			)
 		);
 	    searchView.setSubmitButtonEnabled(true);
+	    searchView.setIconifiedByDefault(true);
 	    
 	    final FloatingJapaneseDictionaryWindow thisWindow = this;
 	    Button clearButton = (Button) view.findViewById(R.id.clear);
