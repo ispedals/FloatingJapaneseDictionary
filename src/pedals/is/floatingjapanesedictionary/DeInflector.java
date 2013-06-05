@@ -2,6 +2,7 @@ package pedals.is.floatingjapanesedictionary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class DeInflector {
 	
@@ -416,6 +417,13 @@ public class DeInflector {
 				}
 			}
 		} while (++i < r.size());
+		
+		Iterator<DeinflectorTerm> iter = r.iterator();
+		while(iter.hasNext()) {
+		    if (iter.next().reason.isEmpty()) {
+		    	iter.remove();
+		    }
+		}
 	
 		return r;
 	}
