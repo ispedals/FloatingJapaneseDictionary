@@ -19,6 +19,8 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
 			DISPLAY_ERROR = 2, DISPLAY_SEARCH = 3;
 
+	public static boolean RUNNING;
+
 	private final int WIDTH = 400;
 	private final int HEIGHT = 400;
 
@@ -58,6 +60,8 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 				return false;
 			}
 		});
+
+		RUNNING = true;
 
 	}
 
