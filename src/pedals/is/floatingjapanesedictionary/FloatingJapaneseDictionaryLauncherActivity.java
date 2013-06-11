@@ -11,10 +11,8 @@ public class FloatingJapaneseDictionaryLauncherActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		if (!FloatingJapaneseDictionaryWindow.RUNNING) {
-			StandOutWindow.show(this, FloatingJapaneseDictionaryWindow.class,
-					StandOutWindow.DEFAULT_ID);
-		}
+		StandOutWindow.show(this, FloatingJapaneseDictionaryWindow.class,
+				StandOutWindow.DEFAULT_ID);
 		finish();
 	}
 }
