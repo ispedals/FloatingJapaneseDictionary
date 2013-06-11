@@ -77,22 +77,15 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			}
 		});
 
-		// from http://stackoverflow.com/a/8019932
-		searchView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+		searchView.setOnSearchClickListener(new View.OnClickListener() {
 
 			@Override
-			public void onLayoutChange(View v, int left, int top, int right,
-					int bottom, int oldLeft, int oldTop, int oldRight,
-					int oldBottom) {
+			public void onClick(View v) {
 
-				SearchView searchView = (SearchView) v;
-				if (!searchView.isIconified()) {
-					thisWindow.CLOSED = false;
-					thisWindow.updateViewLayout(id, thisWindow.getParams(id));
-				}
+				thisWindow.CLOSED = false;
+				thisWindow.updateViewLayout(id, thisWindow.getParams(id));
 
 			}
-
 		});
 
 		RUNNING = true;
