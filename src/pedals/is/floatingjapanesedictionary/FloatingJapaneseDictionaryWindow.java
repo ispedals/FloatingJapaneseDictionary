@@ -21,6 +21,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	public static boolean RUNNING = false;
 	public boolean CLOSED = true;
+	public boolean OPENING_IN_PROGRESS = false;
 
 	private final int CLOSED_WIDTH = 65;
 	private final int CLOSED_HEIGHT = 128;
@@ -91,9 +92,27 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		searchView.setOnSearchClickListener(new View.OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(final View searchView) {
 
 				thisWindow.CLOSED = false;
+				thisWindow.OPENING_IN_PROGRESS = true;
+				Window window = thisWindow.getWindow(id);
+				window.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+
+					@Override
+					public void onLayoutChange(View v, int left, int top,
+							int right, int bottom, int oldLeft, int oldTop,
+							int oldRight, int oldBottom) {
+
+						if (thisWindow.OPENING_IN_PROGRESS) {
+							searchView.requestFocus();
+							thisWindow.OPENING_IN_PROGRESS = false;
+						}
+
+						v.removeOnLayoutChangeListener(this);
+					}
+				});
+
 				thisWindow.updateViewLayout(id, thisWindow.getParams(id));
 
 			}
