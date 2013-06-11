@@ -28,14 +28,25 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	private final int OPENED_WIDTH = 400;
 	private final int OPENED_HEIGHT = 400;
 
+	private StandOutLayoutParams closedParams;
+	private StandOutLayoutParams openedParams;
+
 	private StandOutLayoutParams getClosedParams(int id) {
 
-		return new StandOutLayoutParams(id, CLOSED_WIDTH, CLOSED_HEIGHT);
+		if (closedParams == null) {
+			closedParams = new StandOutLayoutParams(id, CLOSED_WIDTH,
+					CLOSED_HEIGHT);
+		}
+		return closedParams;
 	}
 
 	private StandOutLayoutParams getOpenedParams(int id) {
 
-		return new StandOutLayoutParams(id, OPENED_WIDTH, OPENED_HEIGHT);
+		if (openedParams == null) {
+			openedParams = new StandOutLayoutParams(id, OPENED_WIDTH,
+					OPENED_HEIGHT);
+		}
+		return openedParams;
 	}
 
 	@Override
