@@ -21,8 +21,8 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	public static boolean RUNNING;
 
-	private final int WIDTH = 400;
-	private final int HEIGHT = 400;
+	private final int WIDTH = 65;
+	private final int HEIGHT = 128;
 
 	@Override
 	public String getAppName() {
