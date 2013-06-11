@@ -19,10 +19,24 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
 			DISPLAY_ERROR = 2, DISPLAY_SEARCH = 3;
 
-	public static boolean RUNNING;
+	public static boolean RUNNING = false;
+	public boolean CLOSED = true;
 
-	private final int WIDTH = 65;
-	private final int HEIGHT = 128;
+	private final int CLOSED_WIDTH = 65;
+	private final int CLOSED_HEIGHT = 128;
+
+	private final int OPENED_WIDTH = 400;
+	private final int OPENED_HEIGHT = 400;
+
+	private StandOutLayoutParams getClosedParams(int id) {
+
+		return new StandOutLayoutParams(id, CLOSED_WIDTH, CLOSED_HEIGHT);
+	}
+
+	private StandOutLayoutParams getOpenedParams(int id) {
+
+		return new StandOutLayoutParams(id, OPENED_WIDTH, OPENED_HEIGHT);
+	}
 
 	@Override
 	public String getAppName() {
@@ -57,20 +71,47 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			public boolean onClose() {
 
 				thisWindow.clearText(thisWindow.getWindow(id));
+				thisWindow.CLOSED = true;
+				thisWindow.updateViewLayout(id, thisWindow.getParams(id));
 				return false;
 			}
 		});
 
+		// from http://stackoverflow.com/a/8019932
+		searchView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right,
+					int bottom, int oldLeft, int oldTop, int oldRight,
+					int oldBottom) {
+
+				SearchView searchView = (SearchView) v;
+				if (!searchView.isIconified()) {
+					thisWindow.CLOSED = false;
+					thisWindow.updateViewLayout(id, thisWindow.getParams(id));
+				}
+
+			}
+
+		});
+
 		RUNNING = true;
+		CLOSED = true;
 
 	}
 
 	@Override
 	public StandOutLayoutParams getParams(int id, Window window) {
 
-		return new StandOutLayoutParams(id, WIDTH, HEIGHT,
-				StandOutLayoutParams.AUTO_POSITION,
-				StandOutLayoutParams.AUTO_POSITION);
+		return getParams(id);
+	}
+
+	public StandOutLayoutParams getParams(int id) {
+
+		if (CLOSED) {
+			return getClosedParams(id);
+		}
+		return getOpenedParams(id);
 	}
 
 	@Override
