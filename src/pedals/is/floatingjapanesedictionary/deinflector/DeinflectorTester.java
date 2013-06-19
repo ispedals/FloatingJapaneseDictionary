@@ -1,6 +1,7 @@
-package pedals.is.floatingjapanesedictionary;
+package pedals.is.floatingjapanesedictionary.deinflector;
 
-public class Tester {
+
+public class DeinflectorTester {
 
 	/**
 	 * @param args

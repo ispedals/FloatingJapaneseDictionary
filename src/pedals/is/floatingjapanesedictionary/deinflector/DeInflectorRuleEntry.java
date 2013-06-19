@@ -1,4 +1,4 @@
-package pedals.is.floatingjapanesedictionary;
+package pedals.is.floatingjapanesedictionary.deinflector;
 
 public class DeInflectorRuleEntry {
 

@@ -1,7 +1,10 @@
-package pedals.is.floatingjapanesedictionary;
+package pedals.is.floatingjapanesedictionary.dictionarysearcher;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import pedals.is.floatingjapanesedictionary.deinflector.DeInflector;
+import pedals.is.floatingjapanesedictionary.deinflector.DeinflectorTerm;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

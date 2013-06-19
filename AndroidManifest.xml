@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         
-         <activity android:name=".DictionarySearcherActivity"
+         <activity android:name="pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity"
             android:theme="@android:style/Theme.NoDisplay"
             android:excludeFromRecents="true" >
 	        <intent-filter>

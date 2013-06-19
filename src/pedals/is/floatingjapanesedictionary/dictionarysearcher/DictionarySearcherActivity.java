@@ -1,5 +1,6 @@
-package pedals.is.floatingjapanesedictionary;
+package pedals.is.floatingjapanesedictionary.dictionarysearcher;
 
+import pedals.is.floatingjapanesedictionary.FloatingJapaneseDictionaryWindow;
 import wei.mark.standout.StandOutWindow;
 import android.app.Activity;
 import android.app.SearchManager;

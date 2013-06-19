@@ -1,4 +1,4 @@
-package pedals.is.floatingjapanesedictionary;
+package pedals.is.floatingjapanesedictionary.dictionarysearcher;
 
 import java.util.ArrayList;
 

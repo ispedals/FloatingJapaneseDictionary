@@ -1,4 +1,4 @@
-package pedals.is.floatingjapanesedictionary;
+package pedals.is.floatingjapanesedictionary.deinflector;
 
 import java.util.ArrayList;
 import java.util.HashMap;

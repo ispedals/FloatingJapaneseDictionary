@@ -1,5 +1,7 @@
 package pedals.is.floatingjapanesedictionary;
 
+import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntries;
+import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntry;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.os.Bundle;
