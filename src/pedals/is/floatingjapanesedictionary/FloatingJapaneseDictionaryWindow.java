@@ -76,7 +76,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 				.setSearchableInfo(searchManager
 						.getSearchableInfo(new ComponentName(
 								"pedals.is.floatingjapanesedictionary",
-								"pedals.is.floatingjapanesedictionary.DictionarySearcherActivity")));
+								"pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity")));
 		searchView.setSubmitButtonEnabled(true);
 
 		final FloatingJapaneseDictionaryWindow thisWindow = this;
