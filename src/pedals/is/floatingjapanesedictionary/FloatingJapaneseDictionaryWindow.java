@@ -58,20 +58,6 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			@Override
 			public void onClick(final View searchView) {
 
-				thisWindow.getWindow(id).addOnLayoutChangeListener(
-						new View.OnLayoutChangeListener() {
-
-							@Override
-							public void onLayoutChange(View v, int left,
-									int top, int right, int bottom,
-									int oldLeft, int oldTop, int oldRight,
-									int oldBottom) {
-
-								searchView.requestFocus();
-								v.removeOnLayoutChangeListener(this);
-							}
-						});
-
 				setOpenedState(thisWindow, id);
 
 			}
