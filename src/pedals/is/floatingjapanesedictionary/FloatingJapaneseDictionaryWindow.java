@@ -98,6 +98,13 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	}
 
 	@Override
+	public boolean onClose(int id, Window window) {
+
+		setClosedState(this, id);
+		return false;
+	}
+
+	@Override
 	public StandOutLayoutParams getParams(int id, Window window) {
 
 		return getParams(id);
