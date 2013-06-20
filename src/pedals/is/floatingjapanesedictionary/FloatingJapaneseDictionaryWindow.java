@@ -21,48 +21,10 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
 			DISPLAY_ERROR = 2, DISPLAY_SEARCH = 3;
 
-	public static boolean RUNNING = false;
-	public boolean CLOSED = true;
-	public boolean OPENING_IN_PROGRESS = false;
-
-	private final int CLOSED_WIDTH = 65;
-	private final int CLOSED_HEIGHT = 128;
-
-	private final int OPENED_WIDTH = 400;
-	private final int OPENED_HEIGHT = 400;
+	private static boolean CLOSED = true;
 
 	private StandOutLayoutParams closedParams;
 	private StandOutLayoutParams openedParams;
-
-	private StandOutLayoutParams getClosedParams(int id) {
-
-		if (closedParams == null) {
-			closedParams = new StandOutLayoutParams(id, CLOSED_WIDTH,
-					CLOSED_HEIGHT);
-		}
-		return closedParams;
-	}
-
-	private StandOutLayoutParams getOpenedParams(int id) {
-
-		if (openedParams == null) {
-			openedParams = new StandOutLayoutParams(id, OPENED_WIDTH,
-					OPENED_HEIGHT);
-		}
-		return openedParams;
-	}
-
-	@Override
-	public String getAppName() {
-
-		return "Floating Japanese Dictionary";
-	}
-
-	@Override
-	public int getAppIcon() {
-
-		return android.R.drawable.ic_menu_add;
-	}
 
 	@Override
 	public void createAndAttachView(final int id, FrameLayout frame) {
@@ -78,15 +40,15 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 								"pedals.is.floatingjapanesedictionary",
 								"pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity")));
 		searchView.setSubmitButtonEnabled(true);
+		searchView.setIconified(true);
+		FloatingJapaneseDictionaryWindow.CLOSED = true;
 
 		final FloatingJapaneseDictionaryWindow thisWindow = this;
 		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
 			public boolean onClose() {
 
-				thisWindow.clearText(thisWindow.getWindow(id));
-				thisWindow.CLOSED = true;
-				thisWindow.updateViewLayout(id, thisWindow.getParams(id));
+				setClosedState(thisWindow, id);
 				return false;
 			}
 		});
@@ -96,32 +58,42 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 			@Override
 			public void onClick(final View searchView) {
 
-				thisWindow.CLOSED = false;
-				thisWindow.OPENING_IN_PROGRESS = true;
-				Window window = thisWindow.getWindow(id);
-				window.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+				thisWindow.getWindow(id).addOnLayoutChangeListener(
+						new View.OnLayoutChangeListener() {
 
-					@Override
-					public void onLayoutChange(View v, int left, int top,
-							int right, int bottom, int oldLeft, int oldTop,
-							int oldRight, int oldBottom) {
+							@Override
+							public void onLayoutChange(View v, int left,
+									int top, int right, int bottom,
+									int oldLeft, int oldTop, int oldRight,
+									int oldBottom) {
 
-						if (thisWindow.OPENING_IN_PROGRESS) {
-							searchView.requestFocus();
-							thisWindow.OPENING_IN_PROGRESS = false;
-						}
+								searchView.requestFocus();
+								v.removeOnLayoutChangeListener(this);
+							}
+						});
 
-						v.removeOnLayoutChangeListener(this);
-					}
-				});
-
-				thisWindow.updateViewLayout(id, thisWindow.getParams(id));
+				setOpenedState(thisWindow, id);
 
 			}
 		});
+	}
 
-		RUNNING = true;
-		CLOSED = true;
+	private void setClosedState(FloatingJapaneseDictionaryWindow thisWindow,
+			int id) {
+
+		FloatingJapaneseDictionaryWindow.CLOSED = true;
+		Window window = thisWindow.getWindow(id);
+		thisWindow.clearText(window);
+		thisWindow.updateViewLayout(id, thisWindow.getParams(id));
+	}
+
+	private void setOpenedState(FloatingJapaneseDictionaryWindow thisWindow,
+			int id) {
+
+		FloatingJapaneseDictionaryWindow.CLOSED = false;
+		Window window = thisWindow.getWindow(id);
+		thisWindow.clearText(window);
+		thisWindow.updateViewLayout(id, thisWindow.getParams(id));
 
 	}
 
@@ -189,7 +161,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		}
 		ArrayAdapter<DictionaryEntry> adapter = new ArrayAdapter<DictionaryEntry>(
 				window.getContext(), R.layout.dictionaryentry, entries);
-		final ListView listView = (ListView) window.findViewById(R.id.results);
+		ListView listView = (ListView) window.findViewById(R.id.results);
 		listView.setAdapter(adapter);
 	}
 
@@ -209,8 +181,44 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	private void displaySearch(Window window, String text) {
 
-		SearchView status = (SearchView) window.findViewById(R.id.search);
-		status.setQuery(text, false);
+		SearchView searchView = (SearchView) window.findViewById(R.id.search);
+		searchView.setQuery(text, false);
+	}
+
+	private StandOutLayoutParams getClosedParams(int id) {
+
+		final int CLOSED_WIDTH = 65;
+		final int CLOSED_HEIGHT = 128;
+
+		if (closedParams == null) {
+			closedParams = new StandOutLayoutParams(id, CLOSED_WIDTH,
+					CLOSED_HEIGHT);
+		}
+		return closedParams;
+	}
+
+	private StandOutLayoutParams getOpenedParams(int id) {
+
+		final int OPENED_WIDTH = 400;
+		final int OPENED_HEIGHT = 400;
+
+		if (openedParams == null) {
+			openedParams = new StandOutLayoutParams(id, OPENED_WIDTH,
+					OPENED_HEIGHT);
+		}
+		return openedParams;
+	}
+
+	@Override
+	public String getAppName() {
+
+		return "Floating Japanese Dictionary";
+	}
+
+	@Override
+	public int getAppIcon() {
+
+		return android.R.drawable.ic_menu_add;
 	}
 
 }
