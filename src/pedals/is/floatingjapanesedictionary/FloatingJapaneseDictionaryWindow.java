@@ -7,11 +7,13 @@ import android.content.ComponentName;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import wei.mark.standout.StandOutWindow;
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
@@ -144,7 +146,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	}
 
-	private void displayDefinition(Window window, String text) {
+	private void displayDefinition(final Window window, String text) {
 
 		DictionaryEntries entries = null;
 		try {
@@ -157,6 +159,19 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 				window.getContext(), R.layout.dictionaryentry, entries);
 		ListView listView = (ListView) window.findViewById(R.id.results);
 		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				DictionaryEntry entry = (DictionaryEntry) parent
+						.getItemAtPosition(position);
+				Toast.makeText(window.getContext(), entry.toString(),
+						Toast.LENGTH_LONG).show();
+
+			}
+		});
 	}
 
 	private void displayError(Window window, String error) {
