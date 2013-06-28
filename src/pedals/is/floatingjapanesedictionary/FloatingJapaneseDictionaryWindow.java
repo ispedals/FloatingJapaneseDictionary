@@ -1,10 +1,15 @@
 package pedals.is.floatingjapanesedictionary;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntries;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntry;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -167,8 +172,21 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 				DictionaryEntry entry = (DictionaryEntry) parent
 						.getItemAtPosition(position);
-				Toast.makeText(window.getContext(), entry.toString(),
-						Toast.LENGTH_LONG).show();
+				try {
+					FileWriter filewriter = new FileWriter(
+							new File(
+									Environment
+											.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+									"Words.txt"), true);
+					filewriter.append("\r\n" + entry.toString());
+					filewriter.close();
+					Toast.makeText(window.getContext(), "Saved",
+							Toast.LENGTH_SHORT).show();
+				}
+				catch (IOException e) {
+					Toast.makeText(window.getContext(), "Could not save",
+							Toast.LENGTH_SHORT).show();
+				}
 
 			}
 		});
