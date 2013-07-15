@@ -37,7 +37,7 @@ public class DictionarySearcherActivity extends Activity {
 
 	private DictionaryEntries doQuery(String query) {
 
-		return DictionarySearcher.findWord(query);
+		return DictionarySearcher.findWord(this, query);
 	}
 
 	private void displaySearch(String result) {

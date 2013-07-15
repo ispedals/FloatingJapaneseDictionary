@@ -6,28 +6,37 @@ import java.util.ArrayList;
 import pedals.is.floatingjapanesedictionary.deinflector.DeInflector;
 import pedals.is.floatingjapanesedictionary.deinflector.DeinflectorTerm;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 public class DictionarySearcher {
 
+	private static final boolean USE_LOCAL = false;
+
 	// TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
 	private static final String wordQuery = "select distinct kanji, kana, entry from dict where kanji=? or kana=?";
 
-	public static DictionaryEntries findWord(String word) {
+	private static SQLiteDatabase getDatabase(Context context) {
 
-		final String dictionaryPath = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-				"dict.sqlite").getAbsolutePath();
+		if (USE_LOCAL) {
+			final String dictionaryPath = new File(
+					Environment
+							.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+					"dict.sqlite").getAbsolutePath();
+			return SQLiteDatabase.openDatabase(dictionaryPath, null,
+					SQLiteDatabase.OPEN_READONLY);
+		}
+		DictionaryOpenHelper dictOpener = new DictionaryOpenHelper(context);
+		return dictOpener.getReadableDatabase();
+	}
 
-		SQLiteDatabase dictionary = null;
+	public static DictionaryEntries findWord(Context context, String word) {
+
+		SQLiteDatabase dictionary = getDatabase(context);
 		final DictionaryEntries entries = new DictionaryEntries();
 		try {
-			dictionary = SQLiteDatabase.openDatabase(dictionaryPath, null,
-					SQLiteDatabase.OPEN_READONLY);
-
 			while (entries.size() == 0 && word.length() > 0) {
 				Cursor c = dictionary.rawQuery(wordQuery, new String[] { word,
 						katakanaToHiragana(word) });
