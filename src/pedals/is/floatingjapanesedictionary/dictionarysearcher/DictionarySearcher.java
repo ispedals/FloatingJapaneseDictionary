@@ -13,7 +13,7 @@ import android.os.Environment;
 
 public class DictionarySearcher {
 
-	private static final boolean USE_LOCAL = false;
+	private static final boolean USE_LOCAL = true;
 
 	// TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
 	private static final String wordQuery = "select distinct kanji, kana, entry from dict where kanji=? or kana=?";
@@ -42,8 +42,27 @@ public class DictionarySearcher {
 						katakanaToHiragana(word) });
 
 				while (c.moveToNext()) {
-					DictionaryEntry entry = new DictionaryEntry(c.getString(0),
-							c.getString(1), c.getString(2));
+					String kanji, kana, text;
+					try {
+						kanji = c.getString(0);
+					}
+					catch (Exception e) {
+						kanji = "";
+					}
+					try {
+						kana = c.getString(1);
+					}
+					catch (Exception e) {
+						kana = "";
+					}
+					try {
+						text = c.getString(2);
+					}
+					catch (Exception e) {
+						text = "";
+					}
+					DictionaryEntry entry = new DictionaryEntry(kanji, kana,
+							text);
 					entries.add(entry);
 				}
 				c.close();
