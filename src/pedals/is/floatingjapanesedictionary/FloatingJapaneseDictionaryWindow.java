@@ -3,6 +3,7 @@ package pedals.is.floatingjapanesedictionary;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntries;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntry;
@@ -10,6 +11,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -130,7 +132,8 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 		switch (requestCode) {
 			case DISPLAY_DEFINITION:
-				displayDefinition(window, data.getString("TEXT"));
+				displayDefinition(window,
+						data.getParcelableArrayList("DEFINITIONS"));
 				break;
 			case DISPLAY_SEARCH:
 				displaySearch(window, data.getString("TEXT"));
@@ -151,15 +154,10 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 	}
 
-	private void displayDefinition(final Window window, String text) {
+	private void displayDefinition(final Window window,
+			ArrayList<Parcelable> arrayList) {
 
-		DictionaryEntries entries = null;
-		try {
-			entries = DictionaryEntries.fromJSON(text);
-		}
-		catch (Exception e) {
-			displayError(window, "definitions lost inflight");
-		}
+		DictionaryEntries entries = DictionaryEntries.fromParcelable(arrayList);
 		ArrayAdapter<DictionaryEntry> adapter = new ArrayAdapter<DictionaryEntry>(
 				window.getContext(), R.layout.dictionaryentry, entries);
 		ListView listView = (ListView) window.findViewById(R.id.results);

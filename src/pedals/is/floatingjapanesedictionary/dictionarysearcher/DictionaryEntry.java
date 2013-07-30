@@ -1,7 +1,6 @@
 package pedals.is.floatingjapanesedictionary.dictionarysearcher;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.ContentValues;
 
 public class DictionaryEntry {
 
@@ -22,30 +21,33 @@ public class DictionaryEntry {
 		this(kanji, kana, "(" + deinflect + ") " + entry);
 	}
 
-	public DictionaryEntry(JSONObject object) throws JSONException {
+	public DictionaryEntry(ContentValues values) {
 
-		this.kanji = object.getString("kanji");
-		this.kana = object.getString("kana");
-		this.entry = object.getString("entry");
+		this(values.getAsString("kanji"), values.getAsString("kana"), values
+				.getAsString("entry"));
 	}
 
-	public JSONObject toJSON() {
+	public DictionaryEntry(ContentValues values, String deinflect) {
 
-		JSONObject ret = new JSONObject();
-		try {
-			ret.put("kanji", kanji);
-			ret.put("kana", kana);
-			ret.put("entry", entry);
-		}
-		catch (JSONException e) {
-			e.printStackTrace();
-		}
+		this(values.getAsString("kanji"), values.getAsString("kana"), values
+				.getAsString("entry"), deinflect);
+	}
+
+	public ContentValues toContentValues() {
+
+		ContentValues ret = new ContentValues();
+		ret.put("kanji", this.kanji);
+		ret.put("kana", this.kana);
+		ret.put("entry", this.entry);
 		return ret;
 	}
 
 	public String toString() {
 
-		return kanji + "[" + kana + "]: " + entry;
+		if (this.kanji != null) {
+			return kanji + "[" + kana + "]: " + entry;
+		}
+		return kana + ": " + entry;
 	}
 
 }

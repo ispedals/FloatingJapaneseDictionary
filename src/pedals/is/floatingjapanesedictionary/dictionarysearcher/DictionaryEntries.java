@@ -2,52 +2,30 @@ package pedals.is.floatingjapanesedictionary.dictionarysearcher;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import android.content.ContentValues;
+import android.os.Parcelable;
 
 public class DictionaryEntries extends ArrayList<DictionaryEntry> {
 
 	private static final long serialVersionUID = 2769889375257232116L;
 
-	public static DictionaryEntries fromJSON(String jsonString) {
-
-		JSONArray entries;
-
-		try {
-			entries = new JSONArray(jsonString);
-		}
-		catch (JSONException e) {
-			e.printStackTrace();
-			throw new IllegalStateException(
-					"DictionaryEntries JSON string not unserializable");
-		}
+	public static DictionaryEntries fromParcelable(
+			ArrayList<Parcelable> parcelableEntries) {
 
 		DictionaryEntries coll = new DictionaryEntries();
-
-		for (int i = 0; i < entries.length(); i++) {
-			DictionaryEntry entry;
-			try {
-				entry = new DictionaryEntry(entries.getJSONObject(i));
-			}
-			catch (JSONException e) {
-				e.printStackTrace();
-				throw new IllegalStateException(
-						"DictionaryEntry JSON string not unserializable");
-			}
-			coll.add(entry);
+		for (Parcelable entry : parcelableEntries) {
+			coll.add(new DictionaryEntry((ContentValues) entry));
 		}
-
 		return coll;
 	}
 
-	public JSONArray toJSON() {
+	public ArrayList<ContentValues> toParcelableContentValues() {
 
-		JSONArray ret = new JSONArray();
-
+		ArrayList<ContentValues> ret = new ArrayList<ContentValues>();
 		for (DictionaryEntry entry : this) {
-			ret.put(entry.toJSON());
+			ContentValues value = entry.toContentValues();
+			ret.add(value);
 		}
-
 		return ret;
 	}
 

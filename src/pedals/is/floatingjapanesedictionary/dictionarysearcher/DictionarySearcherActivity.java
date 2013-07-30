@@ -19,15 +19,13 @@ public class DictionarySearcherActivity extends Activity {
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-
 			displaySearch(query);
 			DictionaryEntries result = doQuery(query);
-
 			if (result.isEmpty()) {
 				displayText("No results");
 			}
 			else {
-				displayDefinition(result.toJSON().toString());
+				displayDefinition(result);
 			}
 
 		}
@@ -50,9 +48,15 @@ public class DictionarySearcherActivity extends Activity {
 		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_TEXT);
 	}
 
-	private void displayDefinition(String result) {
+	private void displayDefinition(DictionaryEntries result) {
 
-		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_DEFINITION);
+		int requestCode = FloatingJapaneseDictionaryWindow.DISPLAY_DEFINITION;
+		Bundle data = new Bundle();
+		data.putParcelableArrayList("DEFINITIONS",
+				result.toParcelableContentValues());
+		StandOutWindow.sendData(this, FloatingJapaneseDictionaryWindow.class,
+				StandOutWindow.DEFAULT_ID, requestCode, data, null,
+				StandOutWindow.DISREGARD_ID);
 	}
 
 	private void sendText(String text, int requestCode) {
