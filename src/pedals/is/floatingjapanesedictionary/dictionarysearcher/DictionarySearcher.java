@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import pedals.is.floatingjapanesedictionary.deinflector.DeInflector;
 import pedals.is.floatingjapanesedictionary.deinflector.DeinflectorTerm;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
@@ -42,27 +44,9 @@ public class DictionarySearcher {
 						katakanaToHiragana(word) });
 
 				while (c.moveToNext()) {
-					String kanji, kana, text;
-					try {
-						kanji = c.getString(0);
-					}
-					catch (Exception e) {
-						kanji = "";
-					}
-					try {
-						kana = c.getString(1);
-					}
-					catch (Exception e) {
-						kana = "";
-					}
-					try {
-						text = c.getString(2);
-					}
-					catch (Exception e) {
-						text = "";
-					}
-					DictionaryEntry entry = new DictionaryEntry(kanji, kana,
-							text);
+					ContentValues values = new ContentValues();
+					DatabaseUtils.cursorRowToContentValues(c, values);
+					DictionaryEntry entry = new DictionaryEntry(values);
 					entries.add(entry);
 				}
 				c.close();
@@ -73,8 +57,9 @@ public class DictionarySearcher {
 					c = dictionary.rawQuery(wordQuery, new String[] {
 							term.word, term.word });
 					while (c.moveToNext()) {
-						DictionaryEntry entry = new DictionaryEntry(
-								c.getString(0), c.getString(1), c.getString(2),
+						ContentValues values = new ContentValues();
+						DatabaseUtils.cursorRowToContentValues(c, values);
+						DictionaryEntry entry = new DictionaryEntry(values,
 								term.reason);
 						entries.add(entry);
 					}
