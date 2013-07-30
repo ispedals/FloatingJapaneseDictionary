@@ -13,7 +13,7 @@ import android.os.Environment;
 
 public class DictionarySearcher {
 
-	private static final boolean USE_LOCAL = true;
+	public static boolean USE_LOCAL = false;
 
 	// TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
 	private static final String wordQuery = "select distinct kanji, kana, entry from dict where kanji=? or kana=?";
