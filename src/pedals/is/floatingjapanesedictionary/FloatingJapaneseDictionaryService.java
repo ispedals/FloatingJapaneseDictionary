@@ -90,10 +90,13 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private void synchronizePosition(StandOutLayoutParams params) {
 
+		if (closedParams == null || openedParams == null) {
+			return;
+		}
 		closedParams.x = params.x;
 		closedParams.y = params.y;
 		openedParams.x = params.x;
-		openedParams.y = params.y;		
+		openedParams.y = params.y;
 	}
 
 	private void setOpenedState(FloatingJapaneseDictionaryService thisService,
