@@ -12,7 +12,6 @@ import android.content.ComponentName;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,13 +26,6 @@ import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
 
 public class FloatingJapaneseDictionaryService extends StandOutWindow {
-
-	@Override
-	public boolean onFocusChange(int id, Window window, boolean focus) {
-		
-		Log.d("Window", focus ? "Gaining":"Losing");
-		return false;
-	}
 
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
 			DISPLAY_SEARCH = 2;
