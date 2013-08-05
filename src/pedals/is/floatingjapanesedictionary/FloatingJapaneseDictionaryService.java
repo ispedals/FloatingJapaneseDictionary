@@ -33,7 +33,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private static final String APP_NAME = "Floating Japanese Dictionary";
 	private static final int APP_ICON = android.R.drawable.ic_menu_add;
 
-	private static boolean CLOSED = true;
+	private static boolean CLOSED = false;
 
 	private static StandOutLayoutParams closedParams;
 	private static StandOutLayoutParams openedParams;
@@ -52,8 +52,8 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 								"pedals.is.floatingjapanesedictionary",
 								"pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity")));
 		searchView.setSubmitButtonEnabled(true);
-		searchView.setIconified(true);
-		FloatingJapaneseDictionaryService.CLOSED = true;
+		searchView.setIconified(false);
+		FloatingJapaneseDictionaryService.CLOSED = false;
 
 		final FloatingJapaneseDictionaryService thisService = this;
 		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -69,9 +69,8 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 			@Override
 			public void onClick(final View searchView) {
-				searchView.clearFocus();
+
 				setOpenedState(thisService, id);
-				
 
 			}
 		});
