@@ -31,7 +31,7 @@
 				android:resource="@xml/searchable" />
 		</activity>
 
-		<service android:name=".FloatingJapaneseDictionaryWindow" />
+		<service android:name=".FloatingJapaneseDictionaryService" />
 
 	</application>
 

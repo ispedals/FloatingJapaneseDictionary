@@ -1,6 +1,6 @@
 package pedals.is.floatingjapanesedictionary.dictionarysearcher;
 
-import pedals.is.floatingjapanesedictionary.FloatingJapaneseDictionaryWindow;
+import pedals.is.floatingjapanesedictionary.FloatingJapaneseDictionaryService;
 import wei.mark.standout.StandOutWindow;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -40,21 +40,21 @@ public class DictionarySearcherActivity extends Activity {
 
 	private void displaySearch(String result) {
 
-		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_SEARCH);
+		sendText(result, FloatingJapaneseDictionaryService.DISPLAY_SEARCH);
 	}
 
 	private void displayText(String result) {
 
-		sendText(result, FloatingJapaneseDictionaryWindow.DISPLAY_TEXT);
+		sendText(result, FloatingJapaneseDictionaryService.DISPLAY_TEXT);
 	}
 
 	private void displayDefinition(DictionaryEntries result) {
 
-		int requestCode = FloatingJapaneseDictionaryWindow.DISPLAY_DEFINITION;
+		int requestCode = FloatingJapaneseDictionaryService.DISPLAY_DEFINITION;
 		Bundle data = new Bundle();
 		data.putParcelableArrayList("DEFINITIONS",
 				result.toParcelableContentValues());
-		StandOutWindow.sendData(this, FloatingJapaneseDictionaryWindow.class,
+		StandOutWindow.sendData(this, FloatingJapaneseDictionaryService.class,
 				StandOutWindow.DEFAULT_ID, requestCode, data, null,
 				StandOutWindow.DISREGARD_ID);
 	}
@@ -63,7 +63,7 @@ public class DictionarySearcherActivity extends Activity {
 
 		Bundle data = new Bundle();
 		data.putString("TEXT", text);
-		StandOutWindow.sendData(this, FloatingJapaneseDictionaryWindow.class,
+		StandOutWindow.sendData(this, FloatingJapaneseDictionaryService.class,
 				StandOutWindow.DEFAULT_ID, requestCode, data, null,
 				StandOutWindow.DISREGARD_ID);
 	}

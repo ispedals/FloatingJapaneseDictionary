@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,15 +26,25 @@ import wei.mark.standout.StandOutWindow;
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
 
-public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
+public class FloatingJapaneseDictionaryService extends StandOutWindow {
+
+	@Override
+	public boolean onFocusChange(int id, Window window, boolean focus) {
+		
+		Log.d("Window", focus ? "Gaining":"Losing");
+		return false;
+	}
 
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
-			DISPLAY_ERROR = 2, DISPLAY_SEARCH = 3;
+			DISPLAY_SEARCH = 2;
+
+	private static final String APP_NAME = "Floating Japanese Dictionary";
+	private static final int APP_ICON = android.R.drawable.ic_menu_add;
 
 	private static boolean CLOSED = true;
 
-	private StandOutLayoutParams closedParams;
-	private StandOutLayoutParams openedParams;
+	private static StandOutLayoutParams closedParams;
+	private static StandOutLayoutParams openedParams;
 
 	@Override
 	public void createAndAttachView(final int id, FrameLayout frame) {
@@ -50,14 +61,14 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 								"pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity")));
 		searchView.setSubmitButtonEnabled(true);
 		searchView.setIconified(true);
-		FloatingJapaneseDictionaryWindow.CLOSED = true;
+		FloatingJapaneseDictionaryService.CLOSED = true;
 
-		final FloatingJapaneseDictionaryWindow thisWindow = this;
+		final FloatingJapaneseDictionaryService thisService = this;
 		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
 			public boolean onClose() {
 
-				setClosedState(thisWindow, id);
+				setClosedState(thisService, id);
 				return false;
 			}
 		});
@@ -66,29 +77,42 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 
 			@Override
 			public void onClick(final View searchView) {
-
-				setOpenedState(thisWindow, id);
+				searchView.clearFocus();
+				setOpenedState(thisService, id);
+				
 
 			}
 		});
 	}
 
-	private void setClosedState(FloatingJapaneseDictionaryWindow thisWindow,
-			int id) {
+	private void setClosedState(FloatingJapaneseDictionaryService thisService,
+			int window_id) {
 
-		FloatingJapaneseDictionaryWindow.CLOSED = true;
-		Window window = thisWindow.getWindow(id);
-		thisWindow.clearText(window);
-		thisWindow.updateViewLayout(id, thisWindow.getParams(id));
+		FloatingJapaneseDictionaryService.CLOSED = true;
+		Window window = thisService.getWindow(window_id);
+		thisService.clearText(window);
+		thisService.synchronizePosition(thisService.getParams(window_id));
+		thisService.updateViewLayout(window_id,
+				thisService.getParams(window_id));
 	}
 
-	private void setOpenedState(FloatingJapaneseDictionaryWindow thisWindow,
-			int id) {
+	private void synchronizePosition(StandOutLayoutParams params) {
 
-		FloatingJapaneseDictionaryWindow.CLOSED = false;
-		Window window = thisWindow.getWindow(id);
-		thisWindow.clearText(window);
-		thisWindow.updateViewLayout(id, thisWindow.getParams(id));
+		closedParams.x = params.x;
+		closedParams.y = params.y;
+		openedParams.x = params.x;
+		openedParams.y = params.y;		
+	}
+
+	private void setOpenedState(FloatingJapaneseDictionaryService thisService,
+			int window_id) {
+
+		FloatingJapaneseDictionaryService.CLOSED = false;
+		Window window = thisService.getWindow(window_id);
+		thisService.clearText(window);
+		thisService.synchronizePosition(thisService.getParams(window_id));
+		thisService.updateViewLayout(window_id,
+				thisService.getParams(window_id));
 
 	}
 
@@ -118,6 +142,7 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	public int getFlags(int id) {
 
 		return super.getFlags(id) | StandOutFlags.FLAG_DECORATION_SYSTEM
+				| StandOutFlags.FLAG_DECORATION_RESIZE_DISABLE
 				| StandOutFlags.FLAG_BODY_MOVE_ENABLE
 				| StandOutFlags.FLAG_WINDOW_EDGE_LIMITS_ENABLE;
 	}
@@ -190,13 +215,6 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 		});
 	}
 
-	private void displayError(Window window, String error) {
-
-		TextView status = (TextView) window.findViewById(R.id.status);
-		status.setTextSize(20);
-		status.setText("Error: " + error);
-	}
-
 	private void displayText(Window window, String text) {
 
 		TextView status = (TextView) window.findViewById(R.id.status);
@@ -237,13 +255,13 @@ public class FloatingJapaneseDictionaryWindow extends StandOutWindow {
 	@Override
 	public String getAppName() {
 
-		return "Floating Japanese Dictionary";
+		return APP_NAME;
 	}
 
 	@Override
 	public int getAppIcon() {
 
-		return android.R.drawable.ic_menu_add;
+		return APP_ICON;
 	}
 
 }
