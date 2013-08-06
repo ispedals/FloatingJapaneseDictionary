@@ -225,7 +225,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private StandOutLayoutParams getClosedParams(int id) {
 
-		final int CLOSED_WIDTH = 100;
+		final int CLOSED_WIDTH = 200;
 		final int CLOSED_HEIGHT = 128;
 
 		if (closedParams == null) {
