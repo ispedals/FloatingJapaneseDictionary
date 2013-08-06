@@ -33,7 +33,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private static final String APP_NAME = "Floating Japanese Dictionary";
 	private static final int APP_ICON = android.R.drawable.ic_menu_add;
 
-	private static boolean CLOSED = false;
+	private static boolean CLOSED;
 
 	private static StandOutLayoutParams closedParams;
 	private static StandOutLayoutParams openedParams;
@@ -79,10 +79,23 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private void setClosedState(FloatingJapaneseDictionaryService thisService,
 			int window_id) {
 
-		FloatingJapaneseDictionaryService.CLOSED = true;
+		transition(thisService, window_id, true);
+	}
+
+	private void setOpenedState(FloatingJapaneseDictionaryService thisService,
+			int window_id) {
+
+		transition(thisService, window_id, false);
+
+	}
+
+	private void transition(FloatingJapaneseDictionaryService thisService,
+			int window_id, boolean state) {
+
 		Window window = thisService.getWindow(window_id);
 		thisService.clearText(window);
 		thisService.synchronizePosition(thisService.getParams(window_id));
+		FloatingJapaneseDictionaryService.CLOSED = state;
 		thisService.updateViewLayout(window_id,
 				thisService.getParams(window_id));
 	}
@@ -96,18 +109,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		closedParams.y = params.y;
 		openedParams.x = params.x;
 		openedParams.y = params.y;
-	}
-
-	private void setOpenedState(FloatingJapaneseDictionaryService thisService,
-			int window_id) {
-
-		FloatingJapaneseDictionaryService.CLOSED = false;
-		Window window = thisService.getWindow(window_id);
-		thisService.clearText(window);
-		thisService.synchronizePosition(thisService.getParams(window_id));
-		thisService.updateViewLayout(window_id,
-				thisService.getParams(window_id));
-
 	}
 
 	@Override
