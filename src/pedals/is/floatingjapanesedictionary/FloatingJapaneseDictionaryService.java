@@ -113,7 +113,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	@Override
 	public boolean onClose(int id, Window window) {
 
-		setClosedState(this, id);
+		setOpenedState(this, id);
 		stopSelf();
 		return false;
 	}
