@@ -15,23 +15,65 @@ import android.os.Environment;
 
 public class DictionarySearcher {
 
-	public static boolean USE_LOCAL = true;
+	private static final int USING_LOCAL = 1, USING_EXTERNAL = 2,
+			USING_BUILT_IN = 3;
+	public static final int DICTIONARY_TYPE = USING_LOCAL;
+	public static final String DICTIONARY_NAME = "dict.sqlite";
 
 	// TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
 	private static final String wordQuery = "select distinct kanji, kana, entry from dict where kanji=? or kana=?";
 
+	@SuppressWarnings("unused")
 	private static SQLiteDatabase getDatabase(Context context) {
 
-		if (USE_LOCAL) {
-			final String dictionaryPath = new File(
+		if (DICTIONARY_TYPE == USING_EXTERNAL) {
+			File dictionaryFile = new File(
 					Environment
 							.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-					"dict.sqlite").getAbsolutePath();
+					DICTIONARY_NAME);
+			if (!dictionaryFile.exists()) {
+				throw new IllegalStateException(
+						"External dictionary does not exist");
+			}
+			String dictionaryPath = dictionaryFile.getAbsolutePath();
 			return SQLiteDatabase.openDatabase(dictionaryPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 		}
-		DictionaryOpenHelper dictOpener = new DictionaryOpenHelper(context);
-		return dictOpener.getReadableDatabase();
+		else if (DICTIONARY_TYPE == USING_LOCAL) {
+			File dictionaryFile = new File(context.getExternalFilesDir(null),
+					DICTIONARY_NAME);
+			String dictionaryPath = dictionaryFile.getAbsolutePath();
+			if (!dictionaryFile.exists()) {
+				throw new IllegalStateException(
+						"External dictionary does not exist");
+			}
+			return SQLiteDatabase.openDatabase(dictionaryPath, null,
+					SQLiteDatabase.OPEN_READONLY);
+		}
+		else {
+			DictionaryOpenHelper dictOpener = new DictionaryOpenHelper(context);
+			return dictOpener.getReadableDatabase();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	public static boolean dictionaryExists(Context context) {
+
+		File dictionaryFile;
+		if (DICTIONARY_TYPE == USING_EXTERNAL) {
+			dictionaryFile = new File(
+					Environment
+							.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+					DICTIONARY_NAME);
+		}
+		else if (DICTIONARY_TYPE == USING_LOCAL) {
+			dictionaryFile = new File(context.getExternalFilesDir(null),
+					DICTIONARY_NAME);
+		}
+		else {
+			return true;
+		}
+		return dictionaryFile.exists();
 	}
 
 	public static DictionaryEntries findWord(Context context, String word) {

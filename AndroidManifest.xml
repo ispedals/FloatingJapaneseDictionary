@@ -8,6 +8,7 @@
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET" />
 
 	<application android:allowBackup="true" android:icon="@drawable/ic_launcher"
 		android:label="@string/app_name" android:theme="@style/AppTheme">
@@ -29,6 +30,11 @@
 
 			<meta-data android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
+		</activity>
+		<activity
+			android:name="pedals.is.floatingjapanesedictionary.downloader.DictionaryDownloaderActivity"
+			android:excludeFromRecents="true"
+			android:theme="@android:style/Theme.NoDisplay" >
 		</activity>
 
 		<service android:name=".FloatingJapaneseDictionaryService" />
