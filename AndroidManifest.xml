@@ -38,6 +38,7 @@
 		</activity>
 
 		<service android:name=".FloatingJapaneseDictionaryService" />
+		<service android:name="pedals.is.floatingjapanesedictionary.downloader.DictionaryManagerService" />
 
 	</application>
 

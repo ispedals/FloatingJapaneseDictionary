@@ -42,11 +42,11 @@ public class DictionarySearcher {
 		else if (DICTIONARY_TYPE == USING_LOCAL) {
 			File dictionaryFile = new File(context.getExternalFilesDir(null),
 					DICTIONARY_NAME);
-			String dictionaryPath = dictionaryFile.getAbsolutePath();
 			if (!dictionaryFile.exists()) {
 				throw new IllegalStateException(
-						"External dictionary does not exist");
+						"Internal dictionary does not exist");
 			}
+			String dictionaryPath = dictionaryFile.getAbsolutePath();
 			return SQLiteDatabase.openDatabase(dictionaryPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 		}

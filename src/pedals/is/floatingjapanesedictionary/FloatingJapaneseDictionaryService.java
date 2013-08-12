@@ -4,14 +4,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntries;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntry;
+import pedals.is.floatingjapanesedictionary.downloader.DictionaryManagerService;
 import android.app.SearchManager;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,11 +36,34 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private static final String APP_NAME = "Floating Japanese Dictionary";
 	private static final int APP_ICON = android.R.drawable.ic_menu_add;
+	private File saveLocation = new File(
+			Environment
+					.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+			"Words.txt");
 
-	private static boolean CLOSED;
+	private static final String TAG = "FloatingJapaneseDictionaryService";
 
 	private static StandOutLayoutParams closedParams;
 	private static StandOutLayoutParams openedParams;
+
+	public static boolean RUNNING;
+	private static boolean CLOSED;
+
+	@Override
+	public void onCreate() {
+
+		super.onCreate();
+		RUNNING = true;
+		Log.d(TAG, "Created");
+	}
+
+	@Override
+	public void onDestroy() {
+
+		super.onDestroy();
+		RUNNING = false;
+		Log.d(TAG, "Destroyed");
+	}
 
 	@Override
 	public void createAndAttachView(final int id, FrameLayout frame) {
@@ -60,6 +87,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 			public boolean onClose() {
 
+				Log.d(TAG, "searchview close click");
 				setClosedState(thisService, id);
 				return false;
 			}
@@ -70,21 +98,26 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			@Override
 			public void onClick(final View searchView) {
 
+				Log.d(TAG, "searchview search click");
 				setOpenedState(thisService, id);
 
 			}
 		});
+
+		Log.d(TAG, "Creating window; id: " + id);
 	}
 
 	private void setClosedState(FloatingJapaneseDictionaryService thisService,
 			int window_id) {
 
+		Log.d(TAG, "setting closed state");
 		transition(thisService, window_id, true);
 	}
 
 	private void setOpenedState(FloatingJapaneseDictionaryService thisService,
 			int window_id) {
 
+		Log.d(TAG, "setting open state");
 		transition(thisService, window_id, false);
 
 	}
@@ -92,28 +125,32 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private void transition(FloatingJapaneseDictionaryService thisService,
 			int window_id, boolean state) {
 
+		Log.d(TAG, "transitioning");
+
 		Window window = thisService.getWindow(window_id);
+
 		thisService.clearText(window);
-		thisService.synchronizePosition(thisService.getParams(window_id));
+
+		StandOutLayoutParams params = thisService.getParams(window_id);
+		if (closedParams != null && openedParams != null) {
+			Log.d(TAG, "Synchronizing position: x, y " + params.x + " "
+					+ params.y);
+			closedParams.x = params.x;
+			closedParams.y = params.y;
+			openedParams.x = params.x;
+			openedParams.y = params.y;
+		}
+
 		FloatingJapaneseDictionaryService.CLOSED = state;
+
 		thisService.updateViewLayout(window_id,
 				thisService.getParams(window_id));
-	}
-
-	private void synchronizePosition(StandOutLayoutParams params) {
-
-		if (closedParams == null || openedParams == null) {
-			return;
-		}
-		closedParams.x = params.x;
-		closedParams.y = params.y;
-		openedParams.x = params.x;
-		openedParams.y = params.y;
 	}
 
 	@Override
 	public boolean onClose(int id, Window window) {
 
+		Log.d(TAG, "window closing");
 		setOpenedState(this, id);
 		stopSelf();
 		return false;
@@ -150,6 +187,8 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		clearText(window);
 
+		Log.d(TAG, "recieved data, window id " + id + "code " + requestCode);
+
 		switch (requestCode) {
 			case DISPLAY_DEFINITION:
 				displayDefinition(window,
@@ -166,6 +205,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private void clearText(Window window) {
 
+		Log.d(TAG, "clearing text");
 		TextView status = (TextView) window.findViewById(R.id.status);
 		ListView listView = (ListView) window.findViewById(R.id.results);
 		status.setText("");
@@ -177,6 +217,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private void displayDefinition(final Window window,
 			ArrayList<Parcelable> arrayList) {
 
+		Log.d(TAG, "displaying Definition");
 		DictionaryEntries entries = DictionaryEntries.fromParcelable(arrayList);
 		ArrayAdapter<DictionaryEntry> adapter = new ArrayAdapter<DictionaryEntry>(
 				window.getContext(), R.layout.dictionaryentry, entries);
@@ -190,18 +231,19 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 				DictionaryEntry entry = (DictionaryEntry) parent
 						.getItemAtPosition(position);
+				Log.d(TAG, "item clicked " + entry.toString());
 				try {
-					FileWriter filewriter = new FileWriter(
-							new File(
-									Environment
-											.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-									"Words.txt"), true);
+					FileWriter filewriter = new FileWriter(saveLocation, true);
 					filewriter.append("\r\n" + entry.toString());
 					filewriter.close();
+					Log.d(TAG,
+							"item saved to " + saveLocation.getAbsolutePath());
 					Toast.makeText(window.getContext(), "Saved",
 							Toast.LENGTH_SHORT).show();
 				}
 				catch (IOException e) {
+					Log.d(TAG, "Save failed");
+					e.printStackTrace();
 					Toast.makeText(window.getContext(), "Could not save",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -212,6 +254,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private void displayText(Window window, String text) {
 
+		Log.d(TAG, "Displaying text " + text);
 		TextView status = (TextView) window.findViewById(R.id.status);
 		status.setTextSize(20);
 		status.setText(text);
@@ -219,8 +262,30 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private void displaySearch(Window window, String text) {
 
+		Log.d(TAG, "Displaying search " + text);
 		SearchView searchView = (SearchView) window.findViewById(R.id.search);
 		searchView.setQuery(text, false);
+	}
+
+	@Override
+	public List<DropDownListItem> getDropDownItems(int id) {
+
+		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
+		final StandOutWindow service = this;
+		items.add(new DropDownListItem(0, "Reset", new Runnable() {
+
+			@Override
+			public void run() {
+
+				Intent intent = new Intent(service,
+						DictionaryManagerService.class);
+				intent.putExtra("action", "reset");
+				Log.d(TAG, "reset called");
+				service.startService(intent);
+				closeAll();
+			}
+		}));
+		return items;
 	}
 
 	private StandOutLayoutParams getClosedParams(int id) {
