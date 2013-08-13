@@ -32,7 +32,7 @@ public class DictionaryManagerService extends Service {
 
 	// Handler that receives messages from the thread
 	@SuppressLint("HandlerLeak")
-	private final class ServiceHandler extends Handler {
+	private class ServiceHandler extends Handler {
 
 		public ServiceHandler(Looper looper) {
 
@@ -40,19 +40,19 @@ public class DictionaryManagerService extends Service {
 		}
 
 		@Override
-		public void handleMessage(Message msg) {
+		public void handleMessage(Message message) {
 
-			if (msg.obj == null) {
+			if (message.obj == null) {
 				RUNNING = false;
-				stopSelf(msg.arg1);
+				stopSelf(message.arg1);
 			}
-			else if (msg.obj.equals("reset")) {
+			else if (message.obj.equals("reset")) {
 				deleteFiles();
 				RUNNING = false;
-				stopSelf(msg.arg1);
+				stopSelf(message.arg1);
 				return;
 			}
-			else if (msg.obj.equals("download")) {
+			else if (message.obj.equals("download")) {
 				// no pending download
 				if (enqueuedID == -1) {
 					RUNNING = true;
@@ -62,7 +62,7 @@ public class DictionaryManagerService extends Service {
 				// pending download
 				else {
 					RUNNING = false;
-					stopSelf(msg.arg1);
+					stopSelf(message.arg1);
 				}
 			}
 		}
