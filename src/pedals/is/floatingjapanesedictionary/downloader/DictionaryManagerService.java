@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -68,14 +67,13 @@ public class DictionaryManagerService extends Service {
 		}
 	}
 
-	private Looper mServiceLooper;
-	private ServiceHandler mServiceHandler;
+	private Looper looper;
+	private ServiceHandler handler;
 
 	public static String DOWNLOAD_URL = "https://addons.mozilla.org/firefox/downloads/latest/398350/addon-398350-latest.xpi?src=ss";
 	private static final String DOWNLOAD_FILE_NAME = "dict.xpi";
 
-	private DownloadManager manager;
-	private long enqueuedID = -1;
+	private static long enqueuedID = -1;
 
 	public static boolean RUNNING = false;
 	private static final String TAG = "DictionaryManagerService";
@@ -84,30 +82,29 @@ public class DictionaryManagerService extends Service {
 	// it handles extracting the sqlite database out of the xpi file
 	// and placing it into the application external file directory.
 	// It deletes the downloaded xpi after extraction
-	// from http://blog.vogella.com/2011/06/14/android-downloadmanager-example/
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			String action = intent.getAction();
-			if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+			if (intent.getAction().equals(
+					DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 				Log.d(TAG, "processing");
 
 				Query query = new Query();
 				query.setFilterById(enqueuedID);
-				Cursor c = manager.query(query);
+				DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+				Cursor cursor = manager.query(query);
 
-				if (c.moveToFirst()) {
+				if (cursor.moveToFirst()) {
 
-					int columnIndex = c
+					int columnIndex = cursor
 							.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-					if (DownloadManager.STATUS_SUCCESSFUL == c
-							.getInt(columnIndex)) {
+					if (cursor.getInt(columnIndex) == DownloadManager.STATUS_SUCCESSFUL) {
 
-						String uriString = c
-								.getString(c
+						String uriString = cursor
+								.getString(cursor
 										.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
 						extractFile(Uri.parse(uriString),
@@ -148,9 +145,8 @@ public class DictionaryManagerService extends Service {
 				Process.THREAD_PRIORITY_BACKGROUND);
 		thread.start();
 
-		// Get the HandlerThread's Looper and use it for our Handler
-		mServiceLooper = thread.getLooper();
-		mServiceHandler = new ServiceHandler(mServiceLooper);
+		looper = thread.getLooper();
+		handler = new ServiceHandler(looper);
 
 	}
 
@@ -161,17 +157,17 @@ public class DictionaryManagerService extends Service {
 		// start ID so we know which request we're stopping when we finish the
 		// job
 		RUNNING = true;
-		Message msg = mServiceHandler.obtainMessage();
-		msg.arg1 = startId;
+		Message message = handler.obtainMessage();
+		message.arg1 = startId;
 		Log.d(TAG, "started with " + startId);
 		Bundle extra = intent.getExtras();
 		if (extra != null) {
 			String action = extra.getString("action");
-			msg.obj = action;
+			message.obj = action;
 			Log.d(TAG, "started with action " + action);
 		}
 		Log.d(TAG, "started, id is " + enqueuedID);
-		mServiceHandler.sendMessage(msg);
+		handler.sendMessage(message);
 
 		return START_NOT_STICKY;
 
@@ -196,22 +192,16 @@ public class DictionaryManagerService extends Service {
 				Uri.parse(DOWNLOAD_URL));
 		request.setDescription("Japanese-English Dictionary for Floating Japanese Dictionary");
 		request.setTitle("Downloading Dictionary");
-		// in order for this if to run, you must use the android 3.2 to compile
-		// your app
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-		}
+		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
 		request.setDestinationInExternalFilesDir(this, null, DOWNLOAD_FILE_NAME);
 
-		// get download service and enqueue file
-		manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 		enqueuedID = manager.enqueue(request);
 		Log.d(TAG, "Downloading with id " + enqueuedID);
 
 		registerReceiver(receiver, new IntentFilter(
-				DownloadManager.ACTION_DOWNLOAD_COMPLETE), null,
-				mServiceHandler);
+				DownloadManager.ACTION_DOWNLOAD_COMPLETE), null, handler);
 	}
 
 	private void deleteFiles() {
