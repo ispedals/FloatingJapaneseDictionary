@@ -29,10 +29,8 @@
 
 			<meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
 		</activity>
-		<activity
-			android:name="pedals.is.floatingjapanesedictionary.downloader.DictionaryDownloaderActivity"
-			android:excludeFromRecents="true"
-			android:theme="@android:style/Theme.NoDisplay" >
+		<activity android:name=".AboutActivity"
+			android:excludeFromRecents="true" android:noHistory="true">
 		</activity>
 
 		<service android:name=".FloatingJapaneseDictionaryService" />

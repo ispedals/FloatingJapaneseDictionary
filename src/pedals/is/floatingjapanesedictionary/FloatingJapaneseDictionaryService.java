@@ -289,6 +289,18 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
 		final StandOutWindow service = this;
+		items.add(new DropDownListItem(0, "About", new Runnable() {
+
+			@Override
+			public void run() {
+
+				Intent intent = new Intent(service, AboutActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				Log.d(TAG, "about called");
+				service.startActivity(intent);
+				closeAll();
+			}
+		}));
 		items.add(new DropDownListItem(0, "Reset", new Runnable() {
 
 			@Override
