@@ -93,7 +93,6 @@ public class DictionarySearcher {
 				}
 				c.close();
 
-				// now see if the word can be deinflected
 				ArrayList<DeinflectorTerm> words = DeInflector.deInflect(word);
 				for (DeinflectorTerm term : words) {
 					c = dictionary.rawQuery(wordQuery, new String[] {
@@ -120,20 +119,22 @@ public class DictionarySearcher {
 		return entries;
 	}
 
-	// modified from
+	// key insight from
 	// https://code.google.com/p/kurikosu/source/browse/trunk/kurikosu/src/main/java/org/kurikosu/transcription/Hiragana2Katakana.java
+	// that hiragana and katakana codepoints are separated by ^ * 16
+	//
 	// only attempts conversion for strings that are wholly composed of katakana
 	public static String katakanaToHiragana(String word) {
 
-		// hiragana and katakana codepoints are separted by 6 * 16
-		final int HIRAGANA_KATAKANA_UNICODE_SHIFT = 6 * 16;
+		// hiragana and katakana codepoints are separated by 6 * 16
+		int HIRAGANA_KATAKANA_UNICODE_SHIFT = 6 * 16;
 
 		String ret = "";
 
 		for (int i = 0; i < word.length(); i++) {
 
-			final char kana = word.charAt(i);
-			final int kanaValue = (int) kana;
+			char kana = word.charAt(i);
+			int kanaValue = (int) kana;
 
 			// The Unicode block for (full-width) katakana is U+30A0 ... U+30FF
 			// 12448...12543; the long vowel value is 12540, which we keep
