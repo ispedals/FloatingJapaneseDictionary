@@ -1,14 +1,10 @@
 package pedals.is.floatingjapanesedictionary.downloader;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
+import java.util.zip.ZipFile;
 import pedals.is.floatingjapanesedictionary.FloatingJapaneseDictionaryLauncherActivity;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcher;
 
@@ -114,7 +110,7 @@ public class DictionaryManagerService extends Service {
 								.getString(c
 										.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
-						unpackZip(Uri.parse(uriString),
+						extractFile(Uri.parse(uriString),
 								DictionarySearcher.DICTIONARY_NAME);
 
 						new File(Uri.parse(uriString).getPath()).delete();
@@ -227,47 +223,35 @@ public class DictionaryManagerService extends Service {
 	}
 
 	// unzips xpi and extracts desired file to same directory as xpi
-	// from
-	// http://www.jondev.net/articles/Unzipping_Files_with_Android_%28Programmatically%29
-	private File unpackZip(Uri uri, String desiredFile) {
+	private File extractFile(Uri uri, String desiredFile) {
 
-		InputStream is;
-		ZipInputStream zis;
+		Log.d(TAG, "Trying to extract " + desiredFile);
 		File unzippedFile = null;
 		try {
-			File zipFile = new File(uri.getPath());
-			is = new FileInputStream(zipFile);
-			zis = new ZipInputStream(new BufferedInputStream(is));
-			ZipEntry ze;
+			File zippedFile = new File(uri.getPath());
+			ZipFile zipFile = new ZipFile(zippedFile, ZipFile.OPEN_READ);
+			ZipEntry entry = zipFile.getEntry(desiredFile);
+
+			InputStream in = zipFile.getInputStream(entry);
+
+			unzippedFile = new File(zippedFile.getParentFile(), entry.getName());
+			FileOutputStream out = new FileOutputStream(unzippedFile);
+
 			byte[] buffer = new byte[1024];
-			int count;
+			int len;
 
-			while ((ze = zis.getNextEntry()) != null) {
-				if (ze.getName().equals(desiredFile)) {
-
-					unzippedFile = new File(zipFile.getParentFile(),
-							ze.getName());
-					FileOutputStream fout = new FileOutputStream(unzippedFile);
-
-					while ((count = zis.read(buffer)) != -1) {
-						fout.write(buffer, 0, count);
-					}
-
-					fout.close();
-					zis.closeEntry();
-					break;
-				}
+			while ((len = in.read(buffer)) != -1) {
+				out.write(buffer, 0, len);
 			}
 
-			zis.close();
+			out.close();
+			in.close();
+			zipFile.close();
+
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
-			throw new IllegalStateException("IO error when unzipping");
-		}
-		if (unzippedFile == null) {
-			throw new IllegalStateException("Could not extract file "
-					+ desiredFile + " from " + uri.getPath());
+			throw new IllegalStateException("Error while unzipping");
 		}
 		return unzippedFile;
 	}
