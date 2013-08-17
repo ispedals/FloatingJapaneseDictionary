@@ -187,8 +187,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		return super.getFlags(id) | StandOutFlags.FLAG_DECORATION_SYSTEM
 				| StandOutFlags.FLAG_DECORATION_RESIZE_DISABLE
-				| StandOutFlags.FLAG_BODY_MOVE_ENABLE
-				| StandOutFlags.FLAG_WINDOW_EDGE_LIMITS_ENABLE;
+				| StandOutFlags.FLAG_BODY_MOVE_ENABLE;
 	}
 
 	@Override
