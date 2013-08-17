@@ -26,6 +26,7 @@ import java.util.List;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntries;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntry;
 import pedals.is.floatingjapanesedictionary.downloader.DictionaryManagerService;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -83,6 +84,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	}
 
 	@Override
+	@TargetApi(11)
 	public void createAndAttachView(final int id, FrameLayout frame) {
 
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
