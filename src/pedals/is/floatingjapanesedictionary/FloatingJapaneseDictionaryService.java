@@ -99,13 +99,12 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		searchView.setIconified(false);
 		FloatingJapaneseDictionaryService.CLOSED = false;
 
-		final FloatingJapaneseDictionaryService thisService = this;
 		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
 			public boolean onClose() {
 
 				Log.d(TAG, "searchview close click");
-				setClosedState(thisService, id);
+				setClosedState(id);
 				return false;
 			}
 		});
@@ -116,7 +115,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			public void onClick(final View searchView) {
 
 				Log.d(TAG, "searchview search click");
-				setOpenedState(thisService, id);
+				setOpenedState(id);
 
 			}
 		});
@@ -124,31 +123,28 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		Log.d(TAG, "Creating window; id: " + id);
 	}
 
-	private void setClosedState(FloatingJapaneseDictionaryService thisService,
-			int window_id) {
+	private void setClosedState(int window_id) {
 
 		Log.d(TAG, "setting closed state");
-		transition(thisService, window_id, true);
+		transition(window_id, true);
 	}
 
-	private void setOpenedState(FloatingJapaneseDictionaryService thisService,
-			int window_id) {
+	private void setOpenedState(int window_id) {
 
 		Log.d(TAG, "setting open state");
-		transition(thisService, window_id, false);
+		transition(window_id, false);
 
 	}
 
-	private void transition(FloatingJapaneseDictionaryService thisService,
-			int window_id, boolean state) {
+	private void transition(int window_id, boolean state) {
 
 		Log.d(TAG, "transitioning");
 
-		Window window = thisService.getWindow(window_id);
+		Window window = getWindow(window_id);
 
-		thisService.clearText(window);
+		clearText(window);
 
-		StandOutLayoutParams params = thisService.getParams(window_id);
+		StandOutLayoutParams params = getParams(window_id);
 		if (closedParams != null && openedParams != null) {
 			Log.d(TAG, "Synchronizing position: x, y " + params.x + " "
 					+ params.y);
@@ -160,15 +156,14 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		FloatingJapaneseDictionaryService.CLOSED = state;
 
-		thisService.updateViewLayout(window_id,
-				thisService.getParams(window_id));
+		updateViewLayout(window_id, getParams(window_id));
 	}
 
 	@Override
 	public boolean onClose(int id, Window window) {
 
 		Log.d(TAG, "window closing");
-		setOpenedState(this, id);
+		setOpenedState(id);
 		stopSelf();
 		return false;
 	}
