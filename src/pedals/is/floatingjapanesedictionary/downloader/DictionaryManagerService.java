@@ -210,7 +210,7 @@ public class DictionaryManagerService extends Service {
 		request.setDescription("Japanese-English Dictionary for Floating Japanese Dictionary");
 		request.setTitle("Downloading Dictionary");
 		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
+		request.setVisibleInDownloadsUi(false);
 		request.setDestinationInExternalFilesDir(this, null, DOWNLOAD_FILE_NAME);
 
 		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
