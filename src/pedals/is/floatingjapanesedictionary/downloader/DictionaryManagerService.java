@@ -104,47 +104,49 @@ public class DictionaryManagerService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			if (intent.getAction().equals(
+			if (!intent.getAction().equals(
 					DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-				Log.d(TAG, "processing");
-
-				Query query = new Query();
-				query.setFilterById(enqueuedID);
-				DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-				Cursor cursor = manager.query(query);
-
-				if (cursor.moveToFirst()) {
-
-					int columnIndex = cursor
-							.getColumnIndex(DownloadManager.COLUMN_STATUS);
-
-					if (cursor.getInt(columnIndex) == DownloadManager.STATUS_SUCCESSFUL) {
-
-						String uriString = cursor
-								.getString(cursor
-										.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-
-						extractFile(Uri.parse(uriString),
-								DictionarySearcher.DICTIONARY_NAME);
-
-						new File(Uri.parse(uriString).getPath()).delete();
-
-						intent = new Intent(
-								context,
-								FloatingJapaneseDictionaryLauncherActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-								| Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(intent);
-
-						RUNNING = false;
-						enqueuedID = -1;
-						context.unregisterReceiver(receiver);
-
-						Log.d(TAG, "stopping");
-						stopSelf();
-					}
-				}
+				return;
 			}
+			Log.d(TAG, "processing");
+
+			Query query = new Query();
+			query.setFilterById(enqueuedID);
+			DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+			Cursor cursor = manager.query(query);
+
+			if (!cursor.moveToFirst()) {
+				return;
+			}
+
+			int columnIndex = cursor
+					.getColumnIndex(DownloadManager.COLUMN_STATUS);
+
+			if (cursor.getInt(columnIndex) != DownloadManager.STATUS_SUCCESSFUL) {
+				return;
+			}
+
+			String uriString = cursor.getString(cursor
+					.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+
+			extractFile(Uri.parse(uriString),
+					DictionarySearcher.DICTIONARY_NAME);
+
+			new File(Uri.parse(uriString).getPath()).delete();
+
+			intent = new Intent(context,
+					FloatingJapaneseDictionaryLauncherActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+
+			RUNNING = false;
+			enqueuedID = -1;
+			context.unregisterReceiver(receiver);
+
+			Log.d(TAG, "stopping");
+			stopSelf();
+
 		}
 	};
 
