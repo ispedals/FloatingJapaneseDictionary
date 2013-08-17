@@ -53,7 +53,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private static final String APP_NAME = "Floating Japanese Dictionary";
 	private static final int APP_ICON = android.R.drawable.ic_menu_add;
-	private File saveLocation = new File(
+	private static File saveLocation = new File(
 			Environment
 					.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 			"Words.txt");
