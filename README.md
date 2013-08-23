@@ -5,6 +5,9 @@ This app provides a floating window in which one can look up the definitions of 
 * Requires at least Andriod 3.0 (Honeycomb)
 * This app assumes the presence of an external or built-in SD card. Not having one will prevent the app from working
 
+[Download Link](https://dl.dropboxusercontent.com/u/263833/FloatingJapaneseDictionary.apk)
+[Github Repo](https://github.com/ispedals/FloatingJapaneseDictionary)
+
 
 ##Screenshots
 ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/collapsed.manga.png "collapsed.manga") ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/expanded.manga.png "expanded.manga") ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/definition.manga.png "definition.manga") 
