@@ -81,7 +81,11 @@ Tapping on the microphone will prompt you to say the word
 
 The text field will not contain the word you said (or attempted to say) and will display the definitions of the word.
 
+
+##Developing
+This app depends on the StandOut library. Instructions on how to import the library are available at http://forum.xda-developers.com/showthread.php?t=1688531
+
 ##License
-This app is licensed under the GNU General Public License version 2 with the various copyright notices in the source code. In addition, many of the dictionary searching functions have been strongly inspired by Rikaichan.
+This app is licensed under the GNU General Public License version 2 with the various copyright notices in the source code. It also uses the MIT-licensed [StandOut Library](http://pingpongboss.github.com/StandOut) by Mark Wei. In addition, many of the dictionary searching functions have been strongly inspired by Rikaichan.
 
 When downloaded, the dictionary file is a derivative of the EDICT dictionary file. This file is the property of the Electronic Dictionary Research and Development Group, and is used in conformance with the Group's licence. See http://www.csse.monash.edu.au/~jwb/edict.html and http://www.edrdg.org/.
