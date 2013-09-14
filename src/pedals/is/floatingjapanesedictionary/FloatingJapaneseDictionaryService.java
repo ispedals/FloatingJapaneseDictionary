@@ -73,7 +73,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private static StandOutLayoutParams openedParams;
 	private static StandOutLayoutParams expandedParams;
 
-	public static boolean RUNNING;
+	public static boolean RUNNING = false;
 	private static int windowState = OPENED;
 
 	@Override
