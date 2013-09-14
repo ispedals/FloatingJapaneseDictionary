@@ -61,11 +61,20 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private static final String TAG = "FloatingJapaneseDictionaryService";
 
+	private static final int CLOSED = 0, OPENED = 1, EXPANDED = 2;
+
+	private static final int CLOSED_WIDTH = 200;
+	private static final int CLOSED_HEIGHT = 128;
+
+	private static final int OPENED_WIDTH = 400;
+	private static final int OPENED_HEIGHT = 400;
+
 	private static StandOutLayoutParams closedParams;
 	private static StandOutLayoutParams openedParams;
+	private static StandOutLayoutParams expandedParams;
 
 	public static boolean RUNNING;
-	private static boolean CLOSED;
+	private static int windowState = OPENED;
 
 	@Override
 	public void onCreate() {
@@ -99,7 +108,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 								"pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity")));
 		searchView.setSubmitButtonEnabled(true);
 		searchView.setIconified(false);
-		FloatingJapaneseDictionaryService.CLOSED = false;
+		FloatingJapaneseDictionaryService.windowState = OPENED;
 
 		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
@@ -128,35 +137,40 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private void setClosedState(int window_id) {
 
 		Log.d(TAG, "setting closed state");
-		transition(window_id, true);
+		transition(window_id, CLOSED);
 	}
 
 	private void setOpenedState(int window_id) {
 
 		Log.d(TAG, "setting open state");
-		transition(window_id, false);
+		transition(window_id, OPENED);
 
 	}
 
-	private void transition(int window_id, boolean state) {
+	private void synchronizePositions(int id, StandOutLayoutParams... params) {
+
+		StandOutLayoutParams currentParam = getParams(id);
+		Log.d(TAG, "Synchronizing position: x, y " + currentParam.x + " "
+				+ currentParam.y);
+		for (int i = 0; i < params.length; i++) {
+			if (params[i] != null) {
+				params[i].x = currentParam.x;
+				params[i].y = currentParam.y;
+			}
+		}
+	}
+
+	private void transition(int window_id, int state) {
 
 		Log.d(TAG, "transitioning");
 
 		Window window = getWindow(window_id);
 
 		clearText(window);
+		synchronizePositions(window_id, closedParams, openedParams,
+				expandedParams);
 
-		StandOutLayoutParams params = getParams(window_id);
-		if (closedParams != null && openedParams != null) {
-			Log.d(TAG, "Synchronizing position: x, y " + params.x + " "
-					+ params.y);
-			closedParams.x = params.x;
-			closedParams.y = params.y;
-			openedParams.x = params.x;
-			openedParams.y = params.y;
-		}
-
-		FloatingJapaneseDictionaryService.CLOSED = state;
+		FloatingJapaneseDictionaryService.windowState = state;
 
 		updateViewLayout(window_id, getParams(window_id));
 	}
@@ -178,8 +192,11 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	public StandOutLayoutParams getParams(int id) {
 
-		if (CLOSED) {
+		if (windowState == CLOSED) {
 			return getClosedParams(id);
+		}
+		if (windowState == EXPANDED) {
+			return getExpandedParams(id);
 		}
 		return getOpenedParams(id);
 	}
@@ -282,10 +299,24 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	}
 
 	@Override
-	public List<DropDownListItem> getDropDownItems(int id) {
+	public List<DropDownListItem> getDropDownItems(final int id) {
 
 		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
 		final StandOutWindow service = this;
+		if (windowState != CLOSED) {
+			items.add(new DropDownListItem(0, "Toggle Size", new Runnable() {
+
+				@Override
+				public void run() {
+
+					Log.d(TAG, "Toggling size");
+					windowState = (windowState == OPENED) ? EXPANDED : OPENED;
+					Log.d(TAG, "windowState is " + windowState);
+					synchronizePositions(id, openedParams, expandedParams);
+					updateViewLayout(id, getParams(id));
+				}
+			}));
+		}
 		items.add(new DropDownListItem(0, "About", new Runnable() {
 
 			@Override
@@ -316,9 +347,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private StandOutLayoutParams getClosedParams(int id) {
 
-		final int CLOSED_WIDTH = 200;
-		final int CLOSED_HEIGHT = 128;
-
 		if (closedParams == null) {
 			closedParams = new StandOutLayoutParams(id, CLOSED_WIDTH,
 					CLOSED_HEIGHT);
@@ -328,14 +356,20 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private StandOutLayoutParams getOpenedParams(int id) {
 
-		final int OPENED_WIDTH = 400;
-		final int OPENED_HEIGHT = 400;
-
 		if (openedParams == null) {
 			openedParams = new StandOutLayoutParams(id, OPENED_WIDTH,
 					OPENED_HEIGHT);
 		}
 		return openedParams;
+	}
+
+	private StandOutLayoutParams getExpandedParams(int id) {
+
+		if (expandedParams == null) {
+			expandedParams = new StandOutLayoutParams(id, OPENED_WIDTH * 2,
+					OPENED_HEIGHT * 2);
+		}
+		return expandedParams;
 	}
 
 	@Override
