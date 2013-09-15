@@ -73,6 +73,9 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	private static StandOutLayoutParams openedParams;
 	private static StandOutLayoutParams expandedParams;
 
+	private static final DictionaryEntries entries = new DictionaryEntries();
+	private static ArrayAdapter<DictionaryEntry> adapter;
+
 	public static boolean RUNNING = false;
 	private static int windowState = OPENED;
 
@@ -127,6 +130,38 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 				Log.d(TAG, "searchview search click");
 				setOpenedState(id);
+
+			}
+		});
+
+		adapter = new ArrayAdapter<DictionaryEntry>(this,
+				R.layout.dictionaryentry, entries);
+		ListView listView = (ListView) view.findViewById(R.id.results);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				DictionaryEntry entry = (DictionaryEntry) parent
+						.getItemAtPosition(position);
+				Log.d(TAG, "item clicked " + entry.toString());
+				try {
+					FileWriter filewriter = new FileWriter(saveLocation, true);
+					filewriter.append("\r\n" + entry.toString());
+					filewriter.close();
+					Log.d(TAG,
+							"item saved to " + saveLocation.getAbsolutePath());
+					Toast.makeText(FloatingJapaneseDictionaryService.this,
+							"Saved", Toast.LENGTH_SHORT).show();
+				}
+				catch (IOException e) {
+					Log.d(TAG, "Save failed");
+					e.printStackTrace();
+					Toast.makeText(FloatingJapaneseDictionaryService.this,
+							"Could not save", Toast.LENGTH_SHORT).show();
+				}
 
 			}
 		});
@@ -238,10 +273,9 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		Log.d(TAG, "clearing text");
 		TextView status = (TextView) window.findViewById(R.id.status);
-		ListView listView = (ListView) window.findViewById(R.id.results);
 		status.setText("");
-		listView.setAdapter(new ArrayAdapter<Object>(window.getContext(),
-				R.layout.dictionaryentry));
+		entries.clear();
+		adapter.notifyDataSetChanged();
 
 	}
 
@@ -249,38 +283,10 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			ArrayList<Parcelable> arrayList) {
 
 		Log.d(TAG, "displaying Definition");
-		DictionaryEntries entries = DictionaryEntries.fromParcelable(arrayList);
-		ArrayAdapter<DictionaryEntry> adapter = new ArrayAdapter<DictionaryEntry>(
-				window.getContext(), R.layout.dictionaryentry, entries);
-		ListView listView = (ListView) window.findViewById(R.id.results);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		entries.clear();
+		entries.addAll(DictionaryEntries.fromParcelable(arrayList));
+		adapter.notifyDataSetChanged();
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-
-				DictionaryEntry entry = (DictionaryEntry) parent
-						.getItemAtPosition(position);
-				Log.d(TAG, "item clicked " + entry.toString());
-				try {
-					FileWriter filewriter = new FileWriter(saveLocation, true);
-					filewriter.append("\r\n" + entry.toString());
-					filewriter.close();
-					Log.d(TAG,
-							"item saved to " + saveLocation.getAbsolutePath());
-					Toast.makeText(window.getContext(), "Saved",
-							Toast.LENGTH_SHORT).show();
-				}
-				catch (IOException e) {
-					Log.d(TAG, "Save failed");
-					e.printStackTrace();
-					Toast.makeText(window.getContext(), "Could not save",
-							Toast.LENGTH_SHORT).show();
-				}
-
-			}
-		});
 	}
 
 	private void displayText(Window window, String text) {
