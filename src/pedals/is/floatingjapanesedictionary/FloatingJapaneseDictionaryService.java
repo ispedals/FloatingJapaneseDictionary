@@ -25,6 +25,7 @@ import java.util.List;
 
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntries;
 import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionaryEntry;
+import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcherActivity;
 import pedals.is.floatingjapanesedictionary.downloader.DictionaryManagerService;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
@@ -51,6 +52,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
 			DISPLAY_SEARCH = 2;
+	public static final String SUBMITTED = "SUBMITTED";
 
 	private static final String APP_NAME = "Floating Japanese Dictionary";
 	private static final int APP_ICON = android.R.drawable.ic_menu_add;
@@ -120,6 +122,39 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 				Log.d(TAG, "searchview close click");
 				setClosedState(id);
 				return false;
+			}
+		});
+
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String query) {
+
+				Intent intent = new Intent(
+						FloatingJapaneseDictionaryService.this,
+						DictionarySearcherActivity.class);
+				intent.setAction(Intent.ACTION_SEARCH);
+				intent.putExtra(SearchManager.QUERY, query);
+				intent.putExtra(SUBMITTED, false);
+				/*
+				 * SearchView itself launches the activity with
+				 * FLAG_ACTIVITY_NEW_TASK.
+				 * 
+				 * Because multiple instances of the activity will be fired
+				 * rapidly, FLAG_ACTIVITY_CLEAR_TOP will either start the
+				 * activity, or kill the activity if it is running and start it
+				 * again.
+				 */
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+						| Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
+				return true;
 			}
 		});
 

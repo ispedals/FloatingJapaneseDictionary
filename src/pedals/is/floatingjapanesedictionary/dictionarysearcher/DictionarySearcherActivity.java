@@ -35,7 +35,17 @@ public class DictionarySearcherActivity extends Activity {
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			displaySearch(query);
+
+			/*
+			 * If the flag isn't set, it means that we can freely update the
+			 * textfield without worrying about disturbing search on type ime
+			 * composition. We need to update the textfield when a voice search
+			 * occurs so that the user knows what the query was recognized as.
+			 */
+			if (intent.getBooleanExtra(
+					FloatingJapaneseDictionaryService.SUBMITTED, true)) {
+				displaySearch(query);
+			}
 			DictionaryEntries result = doQuery(query);
 			if (result.isEmpty()) {
 				displayText("No results");
