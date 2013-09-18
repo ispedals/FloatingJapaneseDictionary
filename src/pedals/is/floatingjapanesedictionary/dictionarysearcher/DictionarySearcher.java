@@ -54,7 +54,6 @@ public class DictionarySearcher {
 	public static final String DICTIONARY_NAME = "dict.sqlite";
 
 	// TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
-	private static final String wordQuery = "select distinct kanji, kana, entry from dict where kanji=? or kana=?";
 
 	@SuppressWarnings("unused")
 	private static SQLiteDatabase getDatabase(Context context) {
@@ -115,8 +114,7 @@ public class DictionarySearcher {
 		final DictionaryEntries entries = new DictionaryEntries();
 		try {
 			while (entries.size() == 0 && word.length() > 0) {
-				Cursor c = dictionary.rawQuery(wordQuery, new String[] { word,
-						katakanaToHiragana(word) });
+				Cursor c = doQuery(dictionary, word);
 
 				while (c.moveToNext()) {
 					ContentValues values = new ContentValues();
@@ -128,8 +126,7 @@ public class DictionarySearcher {
 
 				ArrayList<DeinflectorTerm> words = DeInflector.deInflect(word);
 				for (DeinflectorTerm term : words) {
-					c = dictionary.rawQuery(wordQuery, new String[] {
-							term.word, term.word });
+					c = doQuery(dictionary, term.word);
 					while (c.moveToNext()) {
 						ContentValues values = new ContentValues();
 						DatabaseUtils.cursorRowToContentValues(c, values);
@@ -152,9 +149,46 @@ public class DictionarySearcher {
 		return entries;
 	}
 
+	private static Cursor doQuery(SQLiteDatabase dictionary, String word) {
+
+		String wordQuery = "select distinct kanji, kana, entry from dict where";
+		if (isHiragana(word)) {
+			wordQuery += " kana=?";
+			return dictionary.rawQuery(wordQuery, new String[] { word });
+		}
+		String katakanaReading = katakanaToHiragana(word);
+
+		// was not katakana
+		if (katakanaReading.equals(word)) {
+			wordQuery += " kanji=?";
+			return dictionary.rawQuery(wordQuery, new String[] { word });
+		}
+
+		// is katakana
+		wordQuery += " kanji=? or kana=?";
+		return dictionary.rawQuery(wordQuery, new String[] { word,
+				katakanaReading });
+	}
+
+	public static boolean isHiragana(String word) {
+
+		// hiragana block is U+3040..U+309F or
+		// 12352...12447. We also treat the full vowel at 12540 as hiragana
+		for (int i = 0; i < word.length(); i++) {
+
+			char kana = word.charAt(i);
+			int kanaValue = (int) kana;
+
+			if (kanaValue < 12352 || (kanaValue > 12447 && kanaValue != 12540)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// key insight from
 	// https://code.google.com/p/kurikosu/source/browse/trunk/kurikosu/src/main/java/org/kurikosu/transcription/Hiragana2Katakana.java
-	// that hiragana and katakana codepoints are separated by ^ * 16
+	// that hiragana and katakana codepoints are separated by 2 * 16
 	//
 	// only attempts conversion for strings that are wholly composed of katakana
 	public static String katakanaToHiragana(String word) {
