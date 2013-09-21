@@ -275,7 +275,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	public int getFlags(int id) {
 
 		return super.getFlags(id) | StandOutFlags.FLAG_DECORATION_SYSTEM
-				| StandOutFlags.FLAG_DECORATION_RESIZE_DISABLE
 				| StandOutFlags.FLAG_BODY_MOVE_ENABLE
 				| StandOutFlags.FLAG_DECORATION_MAXIMIZE_DISABLE;
 	}
@@ -392,6 +391,10 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			closedParams = new StandOutLayoutParams(id, CLOSED_WIDTH,
 					CLOSED_HEIGHT);
 		}
+		closedParams.minWidth = CLOSED_WIDTH;
+		closedParams.minHeight = CLOSED_HEIGHT;
+		closedParams.maxWidth = CLOSED_WIDTH;
+		closedParams.maxHeight = CLOSED_HEIGHT;
 		return closedParams;
 	}
 
@@ -400,6 +403,8 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		if (openedParams == null) {
 			openedParams = new StandOutLayoutParams(id, OPENED_WIDTH,
 					OPENED_HEIGHT);
+			openedParams.minWidth = OPENED_WIDTH;
+			openedParams.minHeight = OPENED_HEIGHT;
 		}
 		return openedParams;
 	}
@@ -409,6 +414,8 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		if (expandedParams == null) {
 			expandedParams = new StandOutLayoutParams(id,
 					(int) (OPENED_WIDTH * 1.5), (int) (OPENED_HEIGHT * 1.5));
+			expandedParams.minWidth = (int) (OPENED_WIDTH * 1.5);
+			expandedParams.minHeight = (int) (OPENED_HEIGHT * 1.5);
 		}
 		return expandedParams;
 	}
