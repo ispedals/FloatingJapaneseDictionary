@@ -337,16 +337,17 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	public List<DropDownListItem> getDropDownItems(final int id) {
 
 		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
-		final StandOutWindow service = this;
 		items.add(new DropDownListItem(0, "About", new Runnable() {
 
 			@Override
 			public void run() {
 
-				Intent intent = new Intent(service, AboutActivity.class);
+				Intent intent = new Intent(
+						FloatingJapaneseDictionaryService.this,
+						AboutActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				Log.d(TAG, "about called");
-				service.startActivity(intent);
+				FloatingJapaneseDictionaryService.this.startActivity(intent);
 				closeAll();
 			}
 		}));
@@ -355,11 +356,12 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			@Override
 			public void run() {
 
-				Intent intent = new Intent(service,
+				Intent intent = new Intent(
+						FloatingJapaneseDictionaryService.this,
 						DictionaryManagerService.class);
 				intent.putExtra("action", "reset");
 				Log.d(TAG, "reset called");
-				service.startService(intent);
+				FloatingJapaneseDictionaryService.this.startService(intent);
 				closeAll();
 			}
 		}));
