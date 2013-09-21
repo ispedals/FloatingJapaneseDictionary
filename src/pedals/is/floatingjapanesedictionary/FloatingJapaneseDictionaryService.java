@@ -63,7 +63,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private static final String TAG = "FloatingJapaneseDictionaryService";
 
-	private static final int CLOSED = 0, OPENED = 1, EXPANDED = 2;
+	private static final int CLOSED = 0, OPENED = 1;
 
 	private static final int CLOSED_WIDTH = 200;
 	private static final int CLOSED_HEIGHT = 128;
@@ -73,7 +73,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private static StandOutLayoutParams closedParams;
 	private static StandOutLayoutParams openedParams;
-	private static StandOutLayoutParams expandedParams;
 
 	private static final DictionaryEntries entries = new DictionaryEntries();
 	private static ArrayAdapter<DictionaryEntry> adapter;
@@ -237,8 +236,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		Window window = getWindow(window_id);
 
 		clearText(window);
-		synchronizePositions(window_id, closedParams, openedParams,
-				expandedParams);
+		synchronizePositions(window_id, closedParams, openedParams);
 
 		FloatingJapaneseDictionaryService.windowState = state;
 
@@ -264,9 +262,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		if (windowState == CLOSED) {
 			return getClosedParams(id);
-		}
-		if (windowState == EXPANDED) {
-			return getExpandedParams(id);
 		}
 		return getOpenedParams(id);
 	}
@@ -343,20 +338,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
 		final StandOutWindow service = this;
-		if (windowState != CLOSED) {
-			items.add(new DropDownListItem(0, "Toggle Size", new Runnable() {
-
-				@Override
-				public void run() {
-
-					Log.d(TAG, "Toggling size");
-					windowState = (windowState == OPENED) ? EXPANDED : OPENED;
-					Log.d(TAG, "windowState is " + windowState);
-					synchronizePositions(id, openedParams, expandedParams);
-					updateViewLayout(id, getParams(id));
-				}
-			}));
-		}
 		items.add(new DropDownListItem(0, "About", new Runnable() {
 
 			@Override
@@ -407,17 +388,6 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			openedParams.minHeight = OPENED_HEIGHT;
 		}
 		return openedParams;
-	}
-
-	private StandOutLayoutParams getExpandedParams(int id) {
-
-		if (expandedParams == null) {
-			expandedParams = new StandOutLayoutParams(id,
-					(int) (OPENED_WIDTH * 1.5), (int) (OPENED_HEIGHT * 1.5));
-			expandedParams.minWidth = (int) (OPENED_WIDTH * 1.5);
-			expandedParams.minHeight = (int) (OPENED_HEIGHT * 1.5);
-		}
-		return expandedParams;
 	}
 
 	@Override
