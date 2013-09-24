@@ -10,7 +10,7 @@ This app provides a floating window in which one can look up the definitions of 
 
 
 ##Screenshots
-![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/collapsed.manga.png "collapsed.manga") ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/expanded.manga.png "expanded.manga") ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/definition.manga.png "definition.manga") 
+![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/collapsed.manga.png "collapsed.manga") ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/expanded.manga.png "expanded.manga") ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/definition.manga.png "definition.manga")
 
 ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/video.png "video")
 
