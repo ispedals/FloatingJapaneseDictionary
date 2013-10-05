@@ -48,6 +48,7 @@ import android.os.Environment;
 
 public class DictionarySearcher {
 
+	@SuppressWarnings("unused")
 	private static final int USING_LOCAL = 1, USING_EXTERNAL = 2,
 			USING_BUILT_IN = 3;
 	public static final int DICTIONARY_TYPE = USING_LOCAL;
