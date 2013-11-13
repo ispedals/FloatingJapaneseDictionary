@@ -365,6 +365,25 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 				closeAll();
 			}
 		}));
+
+		Window window = getWindow(id);
+		SearchView searchview = (SearchView) window.findViewById(R.id.search);
+		final String query = searchview.getQuery().toString();
+		if (query.length() != 0) {
+			items.add(new DropDownListItem(0, "Lookup", new Runnable() {
+
+				@Override
+				public void run() {
+
+					Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+					intent.putExtra(SearchManager.QUERY, query);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					Log.d(TAG, "search called with " + query);
+					FloatingJapaneseDictionaryService.this
+							.startActivity(intent);
+				}
+			}));
+		}
 		return items;
 	}
 
