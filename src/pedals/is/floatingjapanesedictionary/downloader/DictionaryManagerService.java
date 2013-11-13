@@ -116,6 +116,7 @@ public class DictionaryManagerService extends Service {
 			Cursor cursor = manager.query(query);
 
 			if (!cursor.moveToFirst()) {
+				cursor.close();
 				return;
 			}
 
@@ -123,11 +124,13 @@ public class DictionaryManagerService extends Service {
 					.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
 			if (cursor.getInt(columnIndex) != DownloadManager.STATUS_SUCCESSFUL) {
+				cursor.close();
 				return;
 			}
 
 			String uriString = cursor.getString(cursor
 					.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+			cursor.close();
 
 			extractFile(Uri.parse(uriString),
 					DictionarySearcher.DICTIONARY_NAME);
