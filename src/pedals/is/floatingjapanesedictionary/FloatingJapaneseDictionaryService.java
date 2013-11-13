@@ -282,7 +282,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 		clearText(window);
 
-		Log.d(TAG, "recieved data, window id " + id + "code " + requestCode);
+		Log.d(TAG, "recieved data, window id " + id + " code " + requestCode);
 
 		switch (requestCode) {
 			case DISPLAY_DEFINITION:
