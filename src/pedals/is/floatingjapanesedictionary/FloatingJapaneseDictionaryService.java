@@ -203,16 +203,16 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		Log.d(TAG, "Creating window; id: " + id);
 	}
 
-	private void setClosedState(int window_id) {
+	private void setClosedState(int id) {
 
 		Log.d(TAG, "setting closed state");
-		transition(window_id, CLOSED);
+		transition(id, CLOSED);
 	}
 
-	private void setOpenedState(int window_id) {
+	private void setOpenedState(int id) {
 
 		Log.d(TAG, "setting open state");
-		transition(window_id, OPENED);
+		transition(id, OPENED);
 
 	}
 
@@ -229,18 +229,18 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		}
 	}
 
-	private void transition(int window_id, int state) {
+	private void transition(int id, int state) {
 
 		Log.d(TAG, "transitioning");
 
-		Window window = getWindow(window_id);
+		Window window = getWindow(id);
 
 		clearText(window);
-		synchronizePositions(window_id, closedParams, openedParams);
+		synchronizePositions(id, closedParams, openedParams);
 
 		FloatingJapaneseDictionaryService.windowState = state;
 
-		updateViewLayout(window_id, getParams(window_id));
+		updateViewLayout(id, getParams(id));
 	}
 
 	@Override
