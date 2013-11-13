@@ -308,7 +308,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	}
 
-	private void displayDefinition(final Window window,
+	private void displayDefinition(Window window,
 			ArrayList<Parcelable> arrayList) {
 
 		Log.d(TAG, "displaying Definition");
@@ -334,7 +334,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	}
 
 	@Override
-	public List<DropDownListItem> getDropDownItems(final int id) {
+	public List<DropDownListItem> getDropDownItems(int id) {
 
 		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
 		items.add(new DropDownListItem(0, "About", new Runnable() {
