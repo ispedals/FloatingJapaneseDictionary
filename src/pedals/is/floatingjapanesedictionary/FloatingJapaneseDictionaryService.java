@@ -51,7 +51,7 @@ import wei.mark.standout.ui.Window;
 public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	public static final int DISPLAY_TEXT = 0, DISPLAY_DEFINITION = 1,
-			DISPLAY_SEARCH = 2;
+			DISPLAY_SEARCH = 2, CLEAR_TEXT = 3;
 	public static final String SUBMITTED = "SUBMITTED";
 
 	private static final String APP_NAME = "Floating Japanese Dictionary";
@@ -291,9 +291,18 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 				break;
 			case DISPLAY_SEARCH:
 				displaySearch(window, data.getString("TEXT"));
+				break;
 			case DISPLAY_TEXT:
-			default:
 				displayText(window, data.getString("TEXT"));
+				break;
+			/*
+			 * Right now we clear the window before processing the data. so
+			 * instead of updating the UI twice, just do nothing. This should
+			 * change if we do not clear the window at the beginning.
+			 */
+			case CLEAR_TEXT:
+			default:
+				// clearText(window);
 		}
 
 	}
