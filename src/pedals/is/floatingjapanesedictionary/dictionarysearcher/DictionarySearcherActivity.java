@@ -34,7 +34,7 @@ public class DictionarySearcherActivity extends Activity {
 		// Get the intent, verify the action and get the query
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
+			String query = intent.getStringExtra(SearchManager.QUERY).trim();
 
 			/*
 			 * If the flag is set, it means we are potentially receiving the
