@@ -37,10 +37,17 @@ public class DictionarySearcherActivity extends Activity {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 
 			/*
-			 * If the flag isn't set, it means that we can freely update the
-			 * textfield without worrying about disturbing search on type ime
-			 * composition. We need to update the textfield when a voice search
-			 * occurs so that the user knows what the query was recognized as.
+			 * If the flag is set, it means we are potentially receiving the
+			 * query through a voice search, so update the input text field with
+			 * the result of the voice recognition.
+			 *
+			 * The reason why we don't unconditionally replace the text field
+			 * with the query is that it disturbs IME composition with
+			 * search-on-type.
+			 *
+			 * SUBMITTED defaults to true because we guarantee SUBMITTED is
+			 * false during search-on-type, and we can't set the flag during a
+			 * voice search.
 			 */
 			if (intent.getBooleanExtra(
 					FloatingJapaneseDictionaryService.SUBMITTED, true)) {
