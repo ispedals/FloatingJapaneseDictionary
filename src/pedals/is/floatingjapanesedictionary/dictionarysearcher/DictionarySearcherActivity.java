@@ -53,12 +53,19 @@ public class DictionarySearcherActivity extends Activity {
 					FloatingJapaneseDictionaryService.SUBMITTED, true)) {
 				displaySearch(query);
 			}
-			DictionaryEntries result = doQuery(query);
-			if (result.isEmpty()) {
-				displayText("No results");
+
+			// ensure we clear the display if we are not searching for anything
+			if (query.isEmpty()) {
+				clearText();
 			}
 			else {
-				displayDefinition(result);
+				DictionaryEntries result = doQuery(query);
+				if (result.isEmpty()) {
+					displayText("No results");
+				}
+				else {
+					displayDefinition(result);
+				}
 			}
 
 		}
@@ -74,6 +81,15 @@ public class DictionarySearcherActivity extends Activity {
 	private void displaySearch(String result) {
 
 		sendText(result, FloatingJapaneseDictionaryService.DISPLAY_SEARCH);
+	}
+
+	/*
+	 * CLEAR_TEXT ignores any extras, so just reuse sendText with a blank string
+	 * to set the request code
+	 */
+	private void clearText() {
+
+		sendText("", FloatingJapaneseDictionaryService.CLEAR_TEXT);
 	}
 
 	private void displayText(String result) {
