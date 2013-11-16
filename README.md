@@ -41,6 +41,9 @@ When you look up a word that is in the dictionary, you will be presented with a 
 
 You can look through all the definitions by swiping up and down on the list of definitions. Notice that the app attempts to deinflect the given word.
 
+####Searching for words online
+You can perform a web search with the current text by selecting **Lookup** from the dropdown menu (see **The dropdown menu** to learn how to access it).
+
 ####Saving a word
 When you want to save a word with its definition, tap the entry. The entry will be saved to the file `Words.txt` in the device's `Download` directory. Accessing the file is left to the user.
 
@@ -69,6 +72,9 @@ To display the dropdown menu, tap the button with the + icon in the upper left c
 
 ![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/dropdown.png "dropdown")
 
+If text is present in the text field, an option **Lookup** is available, which performs a web search with the current text.
+
+![alt text](https://dl.dropboxusercontent.com/u/263833/FloatingDocs/dropdown.lookup.png "lookup")
 
 ###Looking up words using your voice
 **Note: In order for this to work, you appear to need to have Google Voice Search installed and have set the voice language setting to Japanese in Google Voice Search's options**
