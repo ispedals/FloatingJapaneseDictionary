@@ -3,7 +3,7 @@
 	package="pedals.is.floatingjapanesedictionary" android:versionCode="2"
 	android:versionName="2.0">
 
-	<uses-sdk android:minSdkVersion="11" android:targetSdkVersion="18" />
+	<uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19" />
 
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
