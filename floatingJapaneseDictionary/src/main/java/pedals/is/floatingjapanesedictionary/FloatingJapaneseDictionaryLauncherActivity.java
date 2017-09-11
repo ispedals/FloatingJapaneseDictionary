@@ -17,14 +17,16 @@
  */
 package pedals.is.floatingjapanesedictionary;
 
-import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcher;
-import pedals.is.floatingjapanesedictionary.downloader.DictionaryManagerService;
-import wei.mark.standout.StandOutWindow;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import pedals.is.floatingjapanesedictionary.dictionarysearcher.DictionarySearcher;
+import wei.mark.standout.StandOutWindow;
 
 public class FloatingJapaneseDictionaryLauncherActivity extends Activity {
 
@@ -40,14 +42,38 @@ public class FloatingJapaneseDictionaryLauncherActivity extends Activity {
 			finish();
 		}
 
+		else if (!DictionarySearcher.dictionaryExists(this)){ //Do initial extraction
+			Log.d(TAG, "Doing initial extraction");
+			try {
+				InputStream in = this.getAssets().open(DictionarySearcher.DICTIONARY_NAME);
+
+				File unzippedFile =new File(this.getExternalFilesDir(null),
+						DictionarySearcher.DICTIONARY_NAME);
+				FileOutputStream out = new FileOutputStream(unzippedFile);
+
+				byte[] buffer = new byte[1024];
+				int len;
+
+				while ((len = in.read(buffer)) != -1) {
+					out.write(buffer, 0, len);
+				}
+
+				out.close();
+				in.close();
+			} catch (IOException e) {
+				Log.wtf(TAG, e);
+			}
+		}
+
 		// we have a successfully installed dictionary
-		else if (DictionarySearcher.dictionaryExists(this)) {
+		else {
 			Log.d(TAG, "Dictionary exists, starting window");
 			StandOutWindow.show(this, FloatingJapaneseDictionaryService.class,
 					StandOutWindow.DEFAULT_ID);
 			finish();
 		}
 
+		/*
 		// we are currently downloading a dictionary
 		else if (DictionaryManagerService.RUNNING) {
 			Log.d(TAG, "we are currently downloading a dictionary");
@@ -98,6 +124,6 @@ public class FloatingJapaneseDictionaryLauncherActivity extends Activity {
 			builder.create().show();
 
 		}
-
+		*/
 	}
 }
