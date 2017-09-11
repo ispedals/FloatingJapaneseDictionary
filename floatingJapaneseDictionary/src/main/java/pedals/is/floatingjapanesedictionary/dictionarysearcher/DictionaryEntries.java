@@ -38,7 +38,7 @@ public class DictionaryEntries extends ArrayList<DictionaryEntry> {
 
 	public ArrayList<ContentValues> toParcelableContentValues() {
 
-		ArrayList<ContentValues> ret = new ArrayList<ContentValues>();
+		ArrayList<ContentValues> ret = new ArrayList<>();
 		for (DictionaryEntry entry : this) {
 			ContentValues value = entry.toContentValues();
 			ret.add(value);

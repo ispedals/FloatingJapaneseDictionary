@@ -56,12 +56,12 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 
 	private static final String APP_NAME = "Floating Japanese Dictionary";
 	private static final int APP_ICON = android.R.drawable.ic_menu_add;
-	private static File saveLocation = new File(
+	private static final File saveLocation = new File(
 			Environment
 					.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
 			"Words.txt");
 
-	private static final String TAG = "FloatingJapaneseDictionaryService";
+	private static final String TAG = "FJDService";
 
 	private static final int CLOSED = 0, OPENED = 1;
 
@@ -168,7 +168,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 			}
 		});
 
-		adapter = new ArrayAdapter<DictionaryEntry>(this,
+		adapter = new ArrayAdapter<>(this,
 				R.layout.dictionaryentry, entries);
 		ListView listView = (ListView) view.findViewById(R.id.results);
 		listView.setAdapter(adapter);
@@ -183,7 +183,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 				Log.d(TAG, "item clicked " + entry.toString());
 				try {
 					FileWriter filewriter = new FileWriter(saveLocation, true);
-					filewriter.append("\r\n" + entry.toString());
+					filewriter.append("\r\n").append(entry.toString());
 					filewriter.close();
 					Log.d(TAG,
 							"item saved to " + saveLocation.getAbsolutePath());
@@ -221,10 +221,10 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 		StandOutLayoutParams currentParam = getParams(id);
 		Log.d(TAG, "Synchronizing position: x, y " + currentParam.x + " "
 				+ currentParam.y);
-		for (int i = 0; i < params.length; i++) {
-			if (params[i] != null) {
-				params[i].x = currentParam.x;
-				params[i].y = currentParam.y;
+		for (StandOutLayoutParams param : params) {
+			if (param != null) {
+				param.x = currentParam.x;
+				param.y = currentParam.y;
 			}
 		}
 	}
@@ -345,7 +345,7 @@ public class FloatingJapaneseDictionaryService extends StandOutWindow {
 	@Override
 	public List<DropDownListItem> getDropDownItems(int id) {
 
-		List<DropDownListItem> items = new ArrayList<DropDownListItem>();
+		List<DropDownListItem> items = new ArrayList<>();
 		items.add(new DropDownListItem(0, "About", new Runnable() {
 
 			@Override

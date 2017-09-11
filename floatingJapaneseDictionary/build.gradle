@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "pedals.is.floatingjapanesedictionary"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 21
 
         testApplicationId "pedals.is.floatingjapanesedictionary.test"

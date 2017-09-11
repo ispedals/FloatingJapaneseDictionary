@@ -28,7 +28,7 @@ import android.util.Log;
 
 public class FloatingJapaneseDictionaryLauncherActivity extends Activity {
 
-	private static final String TAG = "FloatingJapaneseDictionaryLauncherActivity";
+	private static final String TAG = "FJDLauncherActivity";
 
 	@Override
 	protected void onStart() {

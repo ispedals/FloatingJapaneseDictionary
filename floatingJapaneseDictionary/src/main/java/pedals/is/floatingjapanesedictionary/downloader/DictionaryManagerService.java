@@ -66,7 +66,6 @@ public class DictionaryManagerService extends Service {
 				deleteFiles();
 				RUNNING = false;
 				stopSelf(message.arg1);
-				return;
 			}
 			else if (message.obj.equals("download")) {
 				// no pending download
@@ -87,13 +86,13 @@ public class DictionaryManagerService extends Service {
 	private Looper looper;
 	private ServiceHandler handler;
 
-	public static String DOWNLOAD_URL = "https://addons.mozilla.org/firefox/downloads/latest/398350/addon-398350-latest.xpi?src=ss";
+	private static String DOWNLOAD_URL = "https://addons.mozilla.org/firefox/downloads/latest/398350/addon-398350-latest.xpi?src=ss";
 	private static final String DOWNLOAD_FILE_NAME = "dict.xpi";
 
 	private static long enqueuedID = -1;
 
 	public static boolean RUNNING = false;
-	private static final String TAG = "DictionaryManagerService";
+	private static final String TAG = "FJDManagerService";
 
 	// callback for when download is complete
 	// it handles extracting the sqlite database out of the xpi file
@@ -228,7 +227,11 @@ public class DictionaryManagerService extends Service {
 
 	private void deleteFiles() {
 
-		for (File file : this.getExternalFilesDir(null).listFiles()) {
+		File[] files = this.getExternalFilesDir(null).listFiles();
+		if(files == null){
+			return;
+		}
+		for (File file : files) {
 			Log.d(TAG, "Deleting file: " + file.getAbsolutePath());
 			file.delete();
 		}
@@ -238,7 +241,7 @@ public class DictionaryManagerService extends Service {
 	private File extractFile(Uri uri, String desiredFile) {
 
 		Log.d(TAG, "Trying to extract " + desiredFile);
-		File unzippedFile = null;
+		File unzippedFile;
 		try {
 			File zippedFile = new File(uri.getPath());
 			ZipFile zipFile = new ZipFile(zippedFile, ZipFile.OPEN_READ);

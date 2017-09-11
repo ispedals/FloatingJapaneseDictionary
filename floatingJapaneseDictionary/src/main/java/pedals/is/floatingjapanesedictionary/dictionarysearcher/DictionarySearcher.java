@@ -48,15 +48,14 @@ import android.os.Environment;
 
 public class DictionarySearcher {
 
-	@SuppressWarnings("unused")
+
 	private static final int USING_LOCAL = 1, USING_EXTERNAL = 2,
 			USING_BUILT_IN = 3;
-	public static final int DICTIONARY_TYPE = USING_LOCAL;
+	private static final int DICTIONARY_TYPE = USING_LOCAL;
 	public static final String DICTIONARY_NAME = "dict.sqlite";
 
 	// TABLE dict (kanji TEXT, kana TEXT, entry TEXT)
 
-	@SuppressWarnings("unused")
 	private static SQLiteDatabase getDatabase(Context context) {
 
 		if (DICTIONARY_TYPE == USING_EXTERNAL) {
@@ -83,13 +82,16 @@ public class DictionarySearcher {
 			return SQLiteDatabase.openDatabase(dictionaryPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 		}
-		else {
+		else if (DICTIONARY_TYPE == USING_BUILT_IN){
 			DictionaryOpenHelper dictOpener = new DictionaryOpenHelper(context);
 			return dictOpener.getReadableDatabase();
 		}
+		else {
+            throw new IllegalStateException(
+                    "Unhandled Dictionary Type");
+        }
 	}
 
-	@SuppressWarnings("unused")
 	public static boolean dictionaryExists(Context context) {
 
 		File dictionaryFile;

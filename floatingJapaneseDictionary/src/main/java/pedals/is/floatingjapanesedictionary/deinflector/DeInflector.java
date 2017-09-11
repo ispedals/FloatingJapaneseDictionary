@@ -39,8 +39,8 @@ import java.util.Iterator;
 
 public class DeInflector {
 
-	private static final ArrayList<String> reasons = new ArrayList<String>();
-	private static final ArrayList<DeInflectorRuleGroup> rules = new ArrayList<DeInflectorRuleGroup>();
+	private static final ArrayList<String> reasons = new ArrayList<>();
+	private static final ArrayList<DeInflectorRuleGroup> rules = new ArrayList<>();
 
 	static {
 		reasons.add("polite past negative");
@@ -199,10 +199,10 @@ public class DeInflector {
 	public static ArrayList<DeinflectorTerm> deInflect(
 			final String inflectedWord) {
 
-		final HashMap<String, Integer> have = new HashMap<String, Integer>();
+		final HashMap<String, Integer> have = new HashMap<>();
 		have.put(inflectedWord, 0);
 
-		final ArrayList<DeinflectorTerm> r = new ArrayList<DeinflectorTerm>();
+		final ArrayList<DeinflectorTerm> r = new ArrayList<>();
 		r.add(new DeinflectorTerm(inflectedWord, 0xFF, ""));
 
 		int i = 0;
