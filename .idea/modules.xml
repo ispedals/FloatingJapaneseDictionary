@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FloatingJapaneseDictionary.iml" filepath="$PROJECT_DIR$/FloatingJapaneseDictionary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/floatingJapaneseDictionary/floatingJapaneseDictionary.iml" filepath="$PROJECT_DIR$/floatingJapaneseDictionary/floatingJapaneseDictionary.iml" />
+    </modules>
+  </component>
+</project>
