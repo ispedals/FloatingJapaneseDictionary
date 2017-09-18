@@ -4,7 +4,7 @@ This app provides a floating window in which one can look up the definitions of 
 
 * Requires at least Andriod 4.0 (Ice Cream Sandwich)
 
-[Download Link](<fix>); [Github Repo](https://github.com/ispedals/FloatingJapaneseDictionary)
+[Download Link](https://github.com/ispedals/FloatingJapaneseDictionary/releases); [Github Repo](https://github.com/ispedals/FloatingJapaneseDictionary)
 
 
 ## Screenshots
